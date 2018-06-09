@@ -1,14 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/recommend_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:text="recommend"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            app:contentInsetEnd="0dp"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="enterAlways|scroll"
+            android:id="@+id/recommend_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize">
+            <TextView
+                android:id="@+id/recommend_toolbar_title"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v7.widget.Toolbar>
+        <LinearLayout
+            android:background="@color/recommend_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Spinner
+                android:overlapAnchor="false"
+                android:id="@+id/spinner_function"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+            </Spinner>
+            <Spinner
+                android:overlapAnchor="false"
+                android:id="@+id/spinner_class"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+            </Spinner>
+            <Spinner
+                android:id="@+id/spinner_price"
+                android:overlapAnchor="false"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+            </Spinner>
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
 
 
-</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/product_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
