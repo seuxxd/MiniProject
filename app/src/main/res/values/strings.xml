@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MiniProject</string>
+    <string name="button_login">登录</string>
+    <string name="button_register">注册</string>
+    <string name="other_login">第三方登录</string>
+    <string name="toolbar_icon">工具栏图标</string>
+    <string name="unLogin_jump">随便看看</string>
+</resources>
