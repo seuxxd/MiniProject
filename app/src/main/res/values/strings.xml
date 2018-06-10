@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MiniProject</string>
+    <string name="app_name">看我</string>
     <string name="button_login">登录</string>
     <string name="button_register">注册</string>
     <string name="other_login">第三方登录</string>
@@ -9,7 +9,15 @@
     <!--定制推荐页-->
     <string name="add_like">加入喜欢</string>
     <string name="product_evaluation">查看评论</string>
-    <string name="product_price">参考价</string>
+    <string name="product_price">参考价 </string>
     <string name="recommend">定制推荐</string>
     <string name="evaluation_list_title">产品体验评论</string>
+    <string name="evaluation_list_user_rate">推荐指数 : </string>
+    <string name="evaluation_list_user_name">昵称 : </string>
+
+
+
+    <!--首次登录进入推荐界面的对话框-->
+    <string name="dialog_first_login_message">温馨提示 ： 肌肤检测后才能为你专属定制哦！</string>
+    <string name="dialog_first_login_close_button">看看自己</string>
 </resources>

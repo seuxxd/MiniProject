@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.seuxxd.miniproject.R;
 
@@ -26,11 +28,13 @@ public class EvaluationDialog extends DialogFragment {
     private View mView;
     private int mGravity = Gravity.BOTTOM;
     private Dialog mDialog;
+    private Bundle mBundle;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        mBundle = getArguments();
     }
 
     @NonNull
@@ -40,6 +44,15 @@ public class EvaluationDialog extends DialogFragment {
                 .from(mContext)
                 .inflate(R.layout.page_evaluation,null);
 
+        ImageButton mBackButton = (ImageButton) mContentView.findViewById(R.id.product_evaluation_back);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getDialog() != null)
+                    mDialog.dismiss();
+            }
+        });
+        Toast.makeText(mContext, "id: " + mBundle.getInt("id",0), Toast.LENGTH_SHORT).show();
         mDialog = new AlertDialog
                 .Builder(mContext)
                 .setView(mContentView)

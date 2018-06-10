@@ -7,10 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import adapter.MainViewPagerAdapter;
+import eventbusmodel.FirstLoginNotification;
+import eventbusmodel.JumpToLookMeTab;
+import eventbusmodel.UpdateProductAdapter;
 import fragment.BaseFragment;
 import fragment.CheckFragment;
 import fragment.DiaryFragment;
@@ -24,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private DiaryFragment mDiaryFragment = new DiaryFragment();
 
 
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+
+    private boolean isFirstLogin = true;
 
 //    保存fragment的列表
     List<BaseFragment> mFragmentList;
@@ -35,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        EventBus.getDefault().register(this);
+
+
+
         mFragmentList = new ArrayList<>();
         mFragmentList.add(mRecommendFragment);
         mFragmentList.add(mCheckFragment);
@@ -45,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 //        界面初始化
-        TabLayout mTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.fragment_container);
+        mTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
+        mViewPager = (ViewPager) findViewById(R.id.fragment_container);
 
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -56,7 +72,34 @@ public class MainActivity extends AppCompatActivity {
             mTab.setCustomView(mViewPagerAdapter.getCustomView(i));
         }
 
+        //初始化在第二页
         mTabLayout.getTabAt(1).select();
+
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0){
+                    if (!isFirstLogin)
+                        EventBus.getDefault().post(new UpdateProductAdapter());
+                    else {
+                        EventBus.getDefault().post(new FirstLoginNotification());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
 
     }
 
@@ -70,5 +113,20 @@ public class MainActivity extends AppCompatActivity {
             case KeyEvent.ACTION_DOWN:
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void jumpToLookMe(JumpToLookMeTab jumpToLookMeTab){
+        mTabLayout.getTabAt(1).select();
+    }
+
+    public TabLayout getTabLayout(){
+        return mTabLayout;
     }
 }
