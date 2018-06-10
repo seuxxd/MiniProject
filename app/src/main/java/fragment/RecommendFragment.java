@@ -53,7 +53,8 @@ public class RecommendFragment extends BaseFragment {
                 getContext(),
                 mUrl,
                 mName,
-                mPrice);
+                mPrice,
+                ((AppCompatActivity)getActivity()).getSupportFragmentManager());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

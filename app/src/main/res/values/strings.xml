@@ -11,4 +11,5 @@
     <string name="product_evaluation">查看评论</string>
     <string name="product_price">参考价</string>
     <string name="recommend">定制推荐</string>
+    <string name="evaluation_list_title">产品体验评论</string>
 </resources>

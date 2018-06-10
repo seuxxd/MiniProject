@@ -2,6 +2,7 @@ package adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,8 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     private Context mContext;
 
+    private FragmentManager mManager;
+
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView mPosition;
         ImageView mProductImage;
@@ -62,12 +65,14 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     public ProductRecyclerAdapter(Context context,
                                   String[] pictureURL,
                                   String[] productName,
-                                  String[] productPrice){
+                                  String[] productPrice,
+                                  FragmentManager manager){
         super();
         mContext = context;
         mPictureURL = pictureURL;
         mProductName = productName;
         mProductPrice = productPrice;
+        mManager = manager;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -94,7 +99,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         holder.mProductEvaluation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEvaluationDialog(mContext,position);
+                showEvaluationDialog(mContext,position,mManager);
             }
         });
     }
@@ -109,9 +114,17 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
      * @param context 展示对话框的上下文环境
      * @param position 哪个护肤品
      */
-    private void showEvaluationDialog(Context context , int position){
+    private void showEvaluationDialog(Context context , int position , FragmentManager manager){
 //        View mContentView = LayoutInflater.from(context).inflate(R.layout.page_evaluation,null);
         EvaluationDialog mDialog = new EvaluationDialog();
+        mDialog.show(manager,null);
+    }
 
+    public FragmentManager getManager() {
+        return mManager;
+    }
+
+    public void setManager(FragmentManager manager) {
+        mManager = manager;
     }
 }
