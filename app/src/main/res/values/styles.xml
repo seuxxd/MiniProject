@@ -21,4 +21,9 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <!--RadioButton效果-->
+    <style name="custom_radio_button">
+        <item name="android:button">@null</item>
+    </style>
+
 </resources>

@@ -16,8 +16,20 @@
     <string name="evaluation_list_user_name">昵称 : </string>
 
 
-
     <!--首次登录进入推荐界面的对话框-->
     <string name="dialog_first_login_message">温馨提示 ： 肌肤检测后才能为你专属定制哦！</string>
     <string name="dialog_first_login_close_button">看看自己</string>
+
+
+    <!--成功通过QQ登录的界面-->
+    <string name="qq_login_success_title">欢迎来看我</string>
+    <string name="qq_login_name_tint">有了专属昵称，是最独特的你</string>
+    <string name="qq_login_name_label">昵称</string>
+    <string name="qq_login_name_edit">请输入昵称</string>
+    <string name="qq_login_name_sex">性别</string>
+    <string name="qq_login_name_male">我是俊男</string>
+    <string name="qq_login_name_female">我是靓女</string>
+    <string name="qq_login_birth">何时降临地球？</string>
+    <string name="qq_login_jump">去看我</string>
+
 </resources>

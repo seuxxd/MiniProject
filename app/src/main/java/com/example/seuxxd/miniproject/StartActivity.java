@@ -15,6 +15,7 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +24,12 @@ import imageloader.GlideImageLoader;
 
 public class StartActivity extends AppCompatActivity{
 
-    private TextView mUnLoginJumpTextView;
+//    private TextView mUnLoginJumpTextView;
     private ImageButton mQQLoginButton;
     private Banner mBanner;
+
+    public static final int GUEST_LOGIN = 1;
+    public static final int QQ_LOGIN = 2;
 
     private static final String TAG = "StartActivity";
 
@@ -52,32 +56,33 @@ public class StartActivity extends AppCompatActivity{
      */
     private void initView(){
 
-        mUnLoginJumpTextView = (TextView) findViewById(R.id.unLogin_jump);
+//        mUnLoginJumpTextView = (TextView) findViewById(R.id.unLogin_jump);
         mQQLoginButton = (ImageButton) findViewById(R.id.qq_login);
         mBanner = (Banner) findViewById(R.id.banner);
 
-        mUnLoginJumpTextView.setClickable(true);
+//        mUnLoginJumpTextView.setClickable(true);
     }
 
     /**
      * 初始化事件监听器，可能banner会拦截事件，所以要在banner之前设置好监听器
      */
     private void initListener(){
-        mUnLoginJumpTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mUnLoginIntent = new Intent(StartActivity.this,MainActivity.class);
-                mUnLoginIntent.putExtra("username","guest");
-                Log.i(TAG, "onClick: unlogin");
-                startActivity(mUnLoginIntent);
-                finish();
-            }
-        });
+//        mUnLoginJumpTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent mUnLoginIntent = new Intent(StartActivity.this,MainActivity.class);
+//                mUnLoginIntent.putExtra("username","guest");
+//                mUnLoginIntent.putExtra("type",GUEST_LOGIN);
+//                Log.i(TAG, "onClick: unlogin");
+//                startActivity(mUnLoginIntent);
+//                finish();
+//            }
+//        });
 
         mQQLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this,MainActivity.class));
+                startActivity(new Intent(StartActivity.this,QQLoginSuccessActivity.class));
                 finish();
             }
         });

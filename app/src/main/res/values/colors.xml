@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorLoginButtonPressed">#F27AF3</color>
-    <color name="colorLoginButtonDefault">#F5A2A1</color>
+    <color name="colorLoginButtonDefault">#f5a2a1</color>
     <color name="recommend_background">#EFEFEF</color>
 </resources>

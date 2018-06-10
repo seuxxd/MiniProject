@@ -1,6 +1,6 @@
 package internet;
 
-import internetmodel.LoginResult;
+import internetmodel.firstlogin.LoginResult;
 import io.reactivex.Observable;
 import retrofit2.http.POST;
 

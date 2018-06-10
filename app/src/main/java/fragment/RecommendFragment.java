@@ -70,6 +70,7 @@ public class RecommendFragment extends BaseFragment {
         final AlertDialog mDialog =
                 new AlertDialog
                         .Builder(getContext())
+                        .setCancelable(false)
                         .setView(mDialogView)
                         .create();
 
