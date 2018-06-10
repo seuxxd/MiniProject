@@ -86,4 +86,9 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "nickname: " + nickname + "sex: " + sex + "birth: " + birthday;
+    }
 }

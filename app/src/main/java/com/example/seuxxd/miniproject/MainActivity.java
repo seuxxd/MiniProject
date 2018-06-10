@@ -1,11 +1,13 @@
 package com.example.seuxxd.miniproject;
 
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,7 +75,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //初始化在第二页
-        mTabLayout.getTabAt(1).select();
+        TabLayout.Tab mTab =  mTabLayout.getTabAt(1);
+        if (mTab != null){
+            mTab.select();
+            TextView mText = (TextView) mTab.getCustomView().findViewById(R.id.tab_text);
+            mText.setTextColor(Color.RED);
+        }
 
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -87,11 +94,14 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
+                TextView mTextView = tab.getCustomView().findViewById(R.id.tab_text);
+                mTextView.setTextColor(Color.RED);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                TextView mTextView = tab.getCustomView().findViewById(R.id.tab_text);
+                mTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
 
             @Override

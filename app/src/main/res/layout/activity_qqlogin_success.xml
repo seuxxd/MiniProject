@@ -41,6 +41,7 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:layout_margin="8dp"
         android:id="@+id/qq_login_name_layout"
         android:orientation="horizontal"
         android:layout_below="@id/qq_login_name_tint"
@@ -63,6 +64,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:layout_margin="8dp"
         android:id="@+id/qq_login_sex_layout"
         android:layout_below="@id/qq_login_name_layout"
         android:orientation="horizontal"
@@ -82,6 +84,7 @@
             <RadioButton
                 style="@style/custom_radio_button"
                 android:id="@+id/male"
+                android:layout_margin="16dp"
                 android:background="@mipmap/ic_launcher"
                 android:text="@string/qq_login_name_male"
                 android:gravity="center"
@@ -90,6 +93,7 @@
             <RadioButton
                 style="@style/custom_radio_button"
                 android:id="@+id/female"
+                android:layout_margin="16dp"
                 android:background="@mipmap/ic_launcher"
                 android:text="@string/qq_login_name_female"
                 android:gravity="center"
@@ -98,6 +102,9 @@
         </RadioGroup>
     </LinearLayout>
     <LinearLayout
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
         android:id="@+id/qq_login_birth_layout"
         android:layout_below="@id/qq_login_sex_layout"
         android:orientation="horizontal"
@@ -111,17 +118,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
         <Spinner
+            android:overlapAnchor="false"
             android:id="@+id/qq_login_birth_spinner"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
         </Spinner>
     </LinearLayout>
     <Button
-        android:layout_below="@id/qq_login_birth_layout"
         android:layout_centerHorizontal="true"
         android:text="@string/qq_login_jump"
         android:id="@+id/qq_login_jump"
+        android:background="@drawable/btn_login_register"
+        android:layout_below="@id/qq_login_birth_layout"
+        android:layout_marginTop="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
