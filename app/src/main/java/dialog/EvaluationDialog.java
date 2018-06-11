@@ -2,8 +2,10 @@ package dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,10 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.seuxxd.miniproject.MyCommentActivity;
 import com.example.seuxxd.miniproject.R;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class EvaluationDialog extends DialogFragment {
@@ -50,6 +57,30 @@ public class EvaluationDialog extends DialogFragment {
             public void onClick(View v) {
                 if (getDialog() != null)
                     mDialog.dismiss();
+            }
+        });
+
+        ImageButton mShareButton = (ImageButton) mContentView.findViewById(R.id.product_evaluation_share);
+        mShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(Intent.ACTION_SEND);
+                try {
+                    URI mURI = new URI("https://www.baidu.com");
+                    mIntent.putExtra(Intent.EXTRA_TEXT,"hello");
+                    mIntent.setType("*/*");
+                    mIntent.setPackage("com.tencent.mm");
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                startActivity(Intent.createChooser(mIntent,"请选择要分享的平台"));
+            }
+        });
+        Button mLookMyCommentButton = (Button) mContentView.findViewById(R.id.my_comment_button);
+        mLookMyCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), MyCommentActivity.class));
             }
         });
         Toast.makeText(mContext, "id: " + mBundle.getInt("id",0), Toast.LENGTH_SHORT).show();

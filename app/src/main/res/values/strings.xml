@@ -9,8 +9,10 @@
     <!--定制推荐页-->
     <string name="add_like">加入喜欢</string>
     <string name="product_evaluation">查看评论</string>
+    <string name="product_test">产品体验</string>
     <string name="product_price">参考价 </string>
     <string name="recommend">定制推荐</string>
+    <string name="look_my_comment">看我怎么说</string>
     <string name="evaluation_list_title">产品体验评论</string>
     <string name="evaluation_list_user_rate">推荐指数 : </string>
     <string name="evaluation_list_user_name">昵称 : </string>
@@ -32,4 +34,18 @@
     <string name="qq_login_birth">何时降临地球？</string>
     <string name="qq_login_jump">去看我</string>
 
+    <!--我的评论界面-->
+    <string name="my_comment_title">我的评论</string>
+    <string name="my_comment_rating_title">产品评星</string>
+    <string name="my_comment_submit">提交</string>
+
+    <!--美丽日记-->
+    <string name="diary_title">你好！逆龄肌肤，从记录做起！</string>
+    <string name="diary_sub_title">我的美丽动态</string>
+    <string name="skin_status">肌肤状况</string>
+    <string name="play_big_data">我们一起玩转大数据探索肌肤的奥秘吧！</string>
+    <string name="jump_to_look_me">看我！</string>
+    <string name="add_diary">新增日记</string>
+    <string name="look_diary">查看日记</string>
+    <string name="my_love">我的喜欢</string>
 </resources>
