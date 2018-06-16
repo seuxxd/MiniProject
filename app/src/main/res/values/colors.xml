@@ -3,7 +3,20 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
     <color name="colorLoginButtonPressed">#F27AF3</color>
     <color name="colorLoginButtonDefault">#f5a2a1</color>
     <color name="recommend_background">#EFEFEF</color>
+
+    <color name="main_color">#b0353c</color>
+    <color name="main_bottom_back">#efeeed</color>
+    <color name="main_inactive_color">#707070</color>
+
+    <color name="line_color">#a09899</color>
+
+
+    <color name="progress_color1">#d27a3e</color>
+    <color name="progress_color2">#e49884</color>
+    <color name="progress_color3">#edd270</color>
 </resources>

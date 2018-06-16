@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
+
+    <include layout="@layout/main_header_view"/>
+
+
+    <LinearLayout
+        android:id="@+id/generation_ReportLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp60"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/dp40"
+        android:layout_marginRight="@dimen/dp40"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/dp5"
+        android:paddingTop="@dimen/dp5"
+        >
+
+        <Button
+            android:id="@+id/useCameraBtn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp30"
+            android:layout_marginRight="@dimen/dp20"
+            android:layout_weight="1"
+            android:background="@drawable/main_look_btn_back"
+            android:text="@string/use_pic"
+            android:textSize="@dimen/text_size_12sp"/>
+
+        <Button
+            android:id="@+id/makeReportBtn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp30"
+            android:layout_weight="1"
+            android:background="@drawable/main_look_btn_back"
+            android:text="@string/generate_report"
+            android:textSize="@dimen/text_size_12sp"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/generation_ReportLayout"
+        android:layout_centerHorizontal="true"
+        android:text="@string/look_for_reminder"
+        android:textSize="@dimen/text_size_10sp"/>
+
+    <ImageView
+        android:id="@+id/lookMainImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/reminder"
+        android:layout_below="@id/header"
+        android:layout_marginBottom="@dimen/dp10"
+        android:layout_marginLeft="@dimen/dp16"
+        android:layout_marginRight="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp4"
+
+        />
+
+
+</RelativeLayout>

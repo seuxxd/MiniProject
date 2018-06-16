@@ -3,33 +3,42 @@ package com.example.seuxxd.miniproject;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.Toast;
 
 
-import com.youth.banner.Banner;
-import com.youth.banner.BannerConfig;
-import com.youth.banner.Transformer;
+import com.tencent.connect.common.Constants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 
-import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import imageloader.GlideImageLoader;
+import httpclient.RetrofitClient;
+import internet.CheckHasUserService;
+import internet.GetUserInfoById;
+import internetmodel.login.LoginResult;
+import internetmodel.register.RegisterResult;
+import internetmodel.register.User;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import qqlistener.BaseListener;
+import tencent.SingleTencent;
 
 
 public class StartActivity extends AppCompatActivity{
 
 //    private TextView mUnLoginJumpTextView;
     private ImageButton mQQLoginButton;
-    private Banner mBanner;
 
-    public static final int GUEST_LOGIN = 1;
-    public static final int QQ_LOGIN = 2;
 
     private static final String TAG = "StartActivity";
 
@@ -45,7 +54,6 @@ public class StartActivity extends AppCompatActivity{
 
         initListener();
 
-        initBanner();
     }
 
 
@@ -56,55 +64,171 @@ public class StartActivity extends AppCompatActivity{
      */
     private void initView(){
 
-//        mUnLoginJumpTextView = (TextView) findViewById(R.id.unLogin_jump);
         mQQLoginButton = (ImageButton) findViewById(R.id.qq_login);
-        mBanner = (Banner) findViewById(R.id.banner);
 
-//        mUnLoginJumpTextView.setClickable(true);
     }
 
     /**
-     * 初始化事件监听器，可能banner会拦截事件，所以要在banner之前设置好监听器
+     * 初始化事件监听器
      */
     private void initListener(){
-//        mUnLoginJumpTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent mUnLoginIntent = new Intent(StartActivity.this,MainActivity.class);
-//                mUnLoginIntent.putExtra("username","guest");
-//                mUnLoginIntent.putExtra("type",GUEST_LOGIN);
-//                Log.i(TAG, "onClick: unlogin");
-//                startActivity(mUnLoginIntent);
-//                finish();
-//            }
-//        });
+
 
         mQQLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this,QQLoginSuccessActivity.class));
-                finish();
+                doLogin();
             }
         });
     }
 
-    /**
-     * 初始化首页banner的各项属性
-     */
-    private void initBanner() {
-        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
-        mBanner.setImageLoader(new GlideImageLoader());
-        List<String> mImageList = new ArrayList<>();
-        mImageList.add("http://101.132.154.189/test/1.jpg");
-        mImageList.add("http://101.132.154.189/test/2.jpg");
-        mImageList.add("http://101.132.154.189/test/3.jpg");
-        mBanner.setImages(mImageList);
-        mBanner.setBannerAnimation(Transformer.CubeIn);
-        mBanner.isAutoPlay(true);
-        mBanner.setDelayTime(6000);
-        mBanner.setIndicatorGravity(BannerConfig.CENTER);
-        mBanner.start();
+    //QQ的登录，调用QQ登录SDK
+    private void doLogin(){
+
+        final Tencent mTencent = SingleTencent.getInstance(getApplicationContext());
+        mTencent.login(StartActivity.this, "all", new IUiListener() {
+            @Override
+            public void onComplete(Object o) {
+//                获取QQ登录信息
+                JSONObject json = (JSONObject) o;
+                final String openId;
+                if (TextUtils.isEmpty(json.optString("openid")))
+                    openId = "empty";
+                else
+                    openId = json.optString("openid");
+                Log.i(TAG, "onComplete: openid " + openId);
+//                根据QQ登录信息获取用户是否已经注册过
+                getRegisterInfo(openId);
+            }
+
+            @Override
+            public void onError(UiError uiError) {
+                Log.i(TAG, "onError: " + uiError.errorCode);
+                Log.i(TAG, "onError: " + uiError.errorDetail);
+                Toast.makeText(StartActivity.this, "登陆错误！请重试", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(StartActivity.this, "登录取消", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+    private void getRegisterInfo(final String openId) {
+        Observable<RegisterResult> mObservable =
+                RetrofitClient
+                        .getInstance()
+                        .create(CheckHasUserService.class)
+                        .getHasUserInfo(openId);
+
+        mObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RegisterResult>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(RegisterResult registerResult) {
+                        Log.i(TAG, "onNext: " + registerResult.getStatusCode());
+                        switch (registerResult.getStatusCode()){
+
+                            //用户存在，直接跳转到主页
+                            case "200":
+                                startMainActivity(openId);
+                                break;
+                            //用户不存在，跳转到注册界面
+                            case "404":
+                            default:
+                                startRegisterActivity(openId);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+        });
+    }
+
+    private void startRegisterActivity(String openId) {
+        Toast.makeText(StartActivity.this, "用户还未注册！", Toast.LENGTH_SHORT).show();
+        Intent mFirstIntent = new Intent(StartActivity.this,QQLoginFirstActivity.class);
+        mFirstIntent.putExtra("openId",openId);
+        startActivity(mFirstIntent);
+        finish();
+    }
+
+    private void startMainActivity(final String openId) {
+        Log.i(TAG, "startMainActivity: into startMainActivity");
+        final Intent mIntent = new Intent(StartActivity.this,MainActivity.class);
+        Observable<LoginResult> mObservable =
+                RetrofitClient
+                        .getInstance()
+                        .create(GetUserInfoById.class)
+                        .getInfo(openId);
+        mObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<LoginResult>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(LoginResult s) {
+                        Log.i(TAG, "onNext: s" + s);
+                        if (!TextUtils.isEmpty(s.getStatusCode()) && s.getStatusCode().equals("404"))
+                            return;
+                        else {
+                            User mUser = new User();
+                            mUser.setUsername(openId);
+                            mUser.setNickname(s.getNickname());
+                            mUser.setBirthday(s.getBirthday().substring(0,4));
+                            mUser.setSex(s.getSex());
+                            mUser.setPassword("1");
+                            mIntent.putExtra("user",mUser);
+                            startActivity(mIntent);
+                            finish();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+        });
+    }
+
+
+    //    用于接受QQ登录回调信息
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Tencent.onActivityResultData(requestCode,resultCode,data,new BaseListener());
+        if(requestCode == Constants.REQUEST_API) {
+            if(resultCode == Constants.REQUEST_LOGIN) {
+                Tencent.handleResultData(data, new BaseListener());
+            }
+        }
+    }
+
 
 
 }

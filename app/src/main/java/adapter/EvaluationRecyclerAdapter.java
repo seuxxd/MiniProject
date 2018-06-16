@@ -2,6 +2,7 @@ package adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,14 @@ import com.example.seuxxd.miniproject.R;
 
 import org.w3c.dom.Text;
 
+import internetmodel.mycomment.UploadComment;
+import internetmodel.product.Product;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class EvaluationRecyclerAdapter extends RecyclerView.Adapter<EvaluationRecyclerAdapter.ViewHolder>{
+
+
+    private static final String TAG = "EvaRecyclerAdapter";
 
     class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView mUserImg;
@@ -30,28 +36,19 @@ public class EvaluationRecyclerAdapter extends RecyclerView.Adapter<EvaluationRe
             mRecommendText = (TextView) itemView.findViewById(R.id.product_evaluation_list_user_rate);
             mRatingBar = (MaterialRatingBar) itemView.findViewById(R.id.product_evaluation_list_user_star);
             mComment = (TextView) itemView.findViewById(R.id.product_evaluation_list_user_comment);
+            mRatingBar.setClickable(false);
+            mRatingBar.setIsIndicator(true);
         }
     }
 
     private Context mContext;
-    private String[] mUsername;
-    private String[] mRateLevel;
-    private String[] mComment;
-    private String[] mLikeNum;
-    private boolean[] mIsLike;
+    private UploadComment[] mComments;
+
 
     public EvaluationRecyclerAdapter(Context context,
-                                     String[] username,
-                                     String[] rateLevel,
-                                     String[] comment,
-                                     String[] likeNum,
-                                     boolean[] isLike) {
+                                     UploadComment[] comments){
         mContext = context;
-        mUsername = username;
-        mRateLevel = rateLevel;
-        mComment = comment;
-        mLikeNum = likeNum;
-        mIsLike = isLike;
+        mComments = comments;
     }
 
     @Override
@@ -64,15 +61,17 @@ public class EvaluationRecyclerAdapter extends RecyclerView.Adapter<EvaluationRe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder != null){
-            holder.mUserName.setText(mUsername[position]);
-            holder.mComment.setText(mComment[position]);
-            holder.mRatingBar.setProgress(Integer.valueOf(mRateLevel[position]));
-            Glide.with(mContext).load(R.mipmap.ic_launcher).into(holder.mUserImg);
+            holder.mUserName.setText(mComments[position].getRefereeNickName());
+            holder.mComment.setText(mComments[position].getRefereeCommentContent());
+            Log.i(TAG, mComments[position].toString());
+            holder.mRatingBar.setProgress(Integer.valueOf(mComments[position].getRefereeRecommendLevel()));
+            Glide.with(mContext).load(R.drawable.main_placeholder).into(holder.mUserImg);
+
         }
     }
 
     @Override
     public int getItemCount() {
-        return mUsername.length;
+        return mComments.length;
     }
 }

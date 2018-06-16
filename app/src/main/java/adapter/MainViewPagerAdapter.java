@@ -3,6 +3,7 @@ package adapter;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +26,13 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
 
     FragmentManager mFragmentManager ;
     Context mContext;
-    List<BaseFragment> mFragmentList;
+    List<Fragment> mFragmentList;
     String[] mTitle;
+    int[] mInts = {R.drawable.p3,R.drawable.p1,R.drawable.p5};
 
     public MainViewPagerAdapter(FragmentManager manager ,
                          Context context ,
-                         List<BaseFragment> list ,
+                         List<Fragment> list ,
                          String[] title){
         super(manager);
         mFragmentManager = manager;
@@ -69,7 +71,7 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
         TextView mTextView = (TextView) mView.findViewById(R.id.tab_text);
         ImageView mImageView = (ImageView) mView.findViewById(R.id.tab_image);
         mTextView.setText(mTitle[position]);
-        mImageView.setImageResource(R.mipmap.ic_launcher);
+        mImageView.setImageResource(mInts[position]);
         return mView;
     }
 }

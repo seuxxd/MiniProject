@@ -8,6 +8,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/login_success_toolbar"
+        android:layout_marginTop="50dp"
         app:contentInsetStart="0dp"
         app:contentInsetEnd="0dp"
         android:layout_width="match_parent"
@@ -36,102 +37,109 @@
         android:text="@string/qq_login_name_tint"
         android:gravity="center"
         android:layout_centerHorizontal="true"
+        android:paddingEnd="36dp"
+        android:visibility="invisible"
         android:layout_below="@id/qq_login_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_margin="8dp"
-        android:id="@+id/qq_login_name_layout"
-        android:orientation="horizontal"
+
+
+    <TextView
+        android:id="@+id/qq_login_name_label"
         android:layout_below="@id/qq_login_name_tint"
-        android:layout_width="match_parent"
+        android:layout_alignStart="@id/qq_login_name_tint"
+        android:text="@string/qq_login_name_label"
+        android:gravity="center"
+        android:layout_width="40dp"
+        android:layout_height="60dp" />
+
+    <EditText
+        android:id="@+id/qq_login_name_edit"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/qq_login_name_tint"
+        android:layout_alignEnd="@id/qq_login_name_tint"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:hint="@string/qq_login_name_edit" />
+
+    <TextView
+        android:id="@+id/sex"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/qq_login_name_label"
+        android:layout_below="@+id/qq_login_name_label"
+        android:gravity="center"
+        android:text="@string/qq_login_name_sex" />
+    <!--<ImageView-->
+        <!--android:background="@mipmap/male"-->
+        <!--android:layout_margin="16dp"-->
+        <!--android:layout_toEndOf="@id/sex"-->
+        <!--android:layout_below="@id/qq_login_name_edit"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+    <!--<ImageView-->
+        <!--android:background="@mipmap/female"-->
+        <!--android:layout_margin="16dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+    <RadioGroup
+        android:id="@+id/sex_group"
+        android:layout_alignStart="@id/qq_login_name_edit"
+        android:layout_toEndOf="@id/sex"
+        android:layout_below="@id/qq_login_name_edit"
+        android:layout_width="150dp"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/qq_login_name_label"
-            android:text="@string/qq_login_name_label"
-            android:layout_gravity="center"
+        <RadioButton
+            android:background="@android:color/transparent"
+            android:id="@+id/male"
+            android:drawableEnd="@mipmap/male"
+            android:button="@drawable/radioclick"
+            android:layout_margin="16dp"
+            android:checked="true"
             android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/qq_login_name_edit"
-            android:hint="@string/qq_login_name_edit"
-            android:gravity="center"
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_margin="8dp"
-        android:id="@+id/qq_login_sex_layout"
-        android:layout_below="@id/qq_login_name_layout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+
+        <RadioButton
+            android:id="@+id/female"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableStart="@mipmap/female"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="-36dp"
+            android:background="@android:color/transparent"
+            android:button="@drawable/radioclick"
+            android:gravity="center" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/qq_login_birth"
+        android:layout_alignStart="@id/sex"
+        android:layout_below="@id/sex"
+        android:layout_marginTop="20dp"
+        android:text="@string/qq_login_birth"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Spinner
+        android:overlapAnchor="false"
+        android:layout_toEndOf="@id/qq_login_birth"
+        android:layout_below="@id/sex_group"
+        android:layout_alignTop="@id/qq_login_birth"
+        android:layout_alignEnd="@id/sex_group"
+        android:id="@+id/qq_login_birth_spinner"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/qq_login_name_sex"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
-        <RadioGroup
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
-            <RadioButton
-                style="@style/custom_radio_button"
-                android:id="@+id/male"
-                android:layout_margin="16dp"
-                android:background="@mipmap/ic_launcher"
-                android:text="@string/qq_login_name_male"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <RadioButton
-                style="@style/custom_radio_button"
-                android:id="@+id/female"
-                android:layout_margin="16dp"
-                android:background="@mipmap/ic_launcher"
-                android:text="@string/qq_login_name_female"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </RadioGroup>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginTop="24dp"
-        android:id="@+id/qq_login_birth_layout"
-        android:layout_below="@id/qq_login_sex_layout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/qq_login_birth"
-            android:text="@string/qq_login_birth"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-        <Spinner
-            android:overlapAnchor="false"
-            android:id="@+id/qq_login_birth_spinner"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
-        </Spinner>
-    </LinearLayout>
+    </Spinner>
     <Button
         android:layout_centerHorizontal="true"
         android:text="@string/qq_login_jump"
         android:id="@+id/qq_login_jump"
-        android:background="@drawable/btn_login_register"
-        android:layout_below="@id/qq_login_birth_layout"
-        android:layout_marginTop="16dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/main_look_btn_back"
+        android:layout_marginBottom="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

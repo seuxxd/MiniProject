@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:background="@android:color/white"
+                android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="@dimen/dp20"
+        android:layout_height="@dimen/dp20"
+        android:layout_marginLeft="@dimen/dp10"
+        android:layout_marginTop="@dimen/dp10"
+        android:src="@mipmap/back"/>
+
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/back"
+        android:layout_centerHorizontal="true"
+        android:text="这里是时间"
+        android:textSize="@dimen/text_size_16sp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/back"
+        android:layout_marginTop="@dimen/dp8"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line_color"/>
+
+        <TextView
+            style="@style/addDiaryStyle"
+            android:text="@string/diary_food"
+            />
+
+        <EditText
+            android:id="@+id/foodEdit"
+            style="@style/addDiaryStyleEdit"
+            android:hint="@string/diary_muti_input"/>
+
+        <TextView
+            style="@style/addDiaryStyle"
+            android:text="@string/diary_sport"
+            />
+
+        <EditText
+            android:id="@+id/sportEdit"
+            style="@style/addDiaryStyleEdit"
+            />
+
+        <TextView
+            style="@style/addDiaryStyle"
+            android:text="@string/diary_other"
+            />
+
+        <EditText
+            android:id="@+id/otherEdit"
+            style="@style/addDiaryStyleEdit"
+            android:hint="@string/diary_other_hint"/>
+
+
+        <TextView
+            style="@style/addDiaryStyle"
+            android:text="@string/diary_mood"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp10"
+            android:orientation="vertical">
+
+            <RatingBar
+                android:id="@+id/moodRatingBar"
+                style="@style/moodStarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:numStars="5"
+                android:rating="3"
+                android:stepSize="1"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/diary_mood_bad"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    android:text="@string/diary_normal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    android:text="@string/diary_mood_good"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/addDiaryStyle"
+            android:text="@string/diary_pifu"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp10"
+            android:orientation="vertical">
+
+            <RatingBar
+                android:id="@+id/skinRatingBar"
+                style="@style/moodStarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:numStars="5"
+                android:rating="3"
+                android:stepSize="1"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/diary_pifu_dry"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    android:text="@string/diary_normal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    android:text="@string/diary_pifu_oil"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp20"
+            android:background="@drawable/main_look_btn_back"
+            android:layout_marginBottom="@dimen/dp20"
+            android:text="@string/diary_submit"/>
+    </LinearLayout>
+
+</RelativeLayout>

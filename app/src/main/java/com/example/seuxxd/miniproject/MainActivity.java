@@ -1,12 +1,16 @@
 package com.example.seuxxd.miniproject;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adapter.MainViewPagerAdapter;
+import diary.fragment.MainDiaryFragment;
 import eventbusmodel.FirstLoginNotification;
 import eventbusmodel.JumpToLookMeTab;
 import eventbusmodel.UpdateProductAdapter;
@@ -23,11 +28,13 @@ import fragment.BaseFragment;
 import fragment.CheckFragment;
 import fragment.DiaryFragment;
 import fragment.RecommendFragment;
+import internetmodel.register.User;
+import personal.fragment.MainLookSelfFragment;
 
 public class MainActivity extends AppCompatActivity {
 
 //    三个fragment
-    private CheckFragment mCheckFragment = new CheckFragment();
+    private MainLookSelfFragment mMainLookSelfFragment = new MainLookSelfFragment();
     private RecommendFragment mRecommendFragment = new RecommendFragment();
     private DiaryFragment mDiaryFragment = new DiaryFragment();
 
@@ -35,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private boolean isFirstLogin = true;
+    private boolean isFirstLogin = false;
 
 //    保存fragment的列表
-    List<BaseFragment> mFragmentList;
+    List<Fragment> mFragmentList;
 
 
 //    ViewPagerAdapter自定义
@@ -52,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
 
+        storeUserInfo();
 
         mFragmentList = new ArrayList<>();
         mFragmentList.add(mRecommendFragment);
-        mFragmentList.add(mCheckFragment);
+        mFragmentList.add(MainLookSelfFragment.newInstance(MainLookSelfFragment.class.getName()));
         mFragmentList.add(mDiaryFragment);
         String[] mTitle = {"定制推荐","看看自己","美丽日记"};
         FragmentManager mManager = getSupportFragmentManager();
@@ -79,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
         if (mTab != null){
             mTab.select();
             TextView mText = (TextView) mTab.getCustomView().findViewById(R.id.tab_text);
+            ImageView mImage = (ImageView) mTab.getCustomView().findViewById(R.id.tab_image);
             mText.setTextColor(Color.RED);
+            mImage.setImageResource(R.drawable.p2);
         }
 
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -87,14 +97,17 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (position == 0){
-                    if (!isFirstLogin)
-                        EventBus.getDefault().post(new UpdateProductAdapter());
-                    else {
+                    if (isFirstLogin)
                         EventBus.getDefault().post(new FirstLoginNotification());
-                    }
+                    else
+                        EventBus.getDefault().post(new UpdateProductAdapter());
 
                 }
+
                 TextView mTextView = tab.getCustomView().findViewById(R.id.tab_text);
+                ImageView mImage = (ImageView) tab.getCustomView().findViewById(R.id.tab_image);
+                int[] mInts = {R.drawable.p4,R.drawable.p2,R.drawable.p6};
+                mImage.setImageResource(mInts[position]);
                 mTextView.setTextColor(Color.RED);
             }
 
@@ -102,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabUnselected(TabLayout.Tab tab) {
                 TextView mTextView = tab.getCustomView().findViewById(R.id.tab_text);
                 mTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                ImageView mImage = (ImageView) tab.getCustomView().findViewById(R.id.tab_image);
+                int[] mInts = {R.drawable.p3,R.drawable.p1,R.drawable.p5};
+                mImage.setImageResource(mInts[tab.getPosition()]);
             }
 
             @Override
@@ -110,6 +126,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void storeUserInfo() {
+        Intent mIntent = getIntent();
+        User mUser = mIntent.getParcelableExtra("user");
+        SharedPreferences mSP = getSharedPreferences("user",MODE_PRIVATE);
+        if (mUser != null){
+            mSP.edit()
+                    .putString("username",mUser.getUsername())
+                    .putString("password",mUser.getPassword())
+                    .putString("nickname",mUser.getNickname())
+                    .putString("sex",mUser.getSex())
+                    .putString("birthday",mUser.getBirthday())
+                    .apply();
+        }
 
     }
 

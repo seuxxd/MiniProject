@@ -1,5 +1,5 @@
 package constant;
 
 public class NetUtil {
-    public static final String HOST = "http://101.132.154.189/";
+    public static final String HOST = "http://119.23.206.243:9050/";
 }

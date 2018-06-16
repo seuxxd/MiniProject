@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/main_color</item>
+        <item name="colorPrimaryDark">@color/main_color</item>
+        <item name="colorAccent">@color/main_color</item>
     </style>
 
 <!--dialog全屏，弃用，效果不好-->
@@ -23,7 +23,69 @@
 
     <!--RadioButton效果-->
     <style name="custom_radio_button">
-        <item name="android:button">@null</item>
+        <item name="android:button">@drawable/radioclick</item>
+    </style>
+
+
+    <style name="MainBottomTextStyle">
+        <item name="android:textSize">@dimen/text_size_10sp</item>
+    </style>
+
+
+    <style name="TranslatePopupWindow">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+
+    <style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="actionBarSize">?actionBarSize</item>
+    </style>
+
+    <style name="customTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarTheme">@style/actionBarTheme</item>
+        <item name="colorPrimary">#FFA500</item>
+        <item name="actionBarSize">?actionBarSize</item>
+        <item name="colorPrimaryDark">#CCa500</item>
+    </style>
+
+    <style name="ReportStarStyle" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/five_rating_bar</item>
+        <item name="android:maxHeight">@dimen/dp26</item>
+        <item name="android:minHeight">@dimen/dp26</item>
+
+    </style>
+
+    <style name="moodStarStyle" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/mood_rating_bar</item>
+        <item name="android:maxHeight">@dimen/dp38</item>
+        <item name="android:minHeight">@dimen/dp38</item>
+
+    </style>
+
+    <style name="addDiaryStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/dp10</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="addDiaryStyleEdit">
+        <item name="android:background">@drawable/add_diary_edit_back</item>
+        <item name="android:minHeight">@dimen/dp40</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/dp8</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
+        <item name="android:paddingBottom">@dimen/dp8</item>
+        <item name="android:paddingLeft">@dimen/dp10</item>
+        <item name="android:layout_marginLeft">@dimen/dp20</item>
+        <item name="android:layout_marginRight">@dimen/dp20</item>
+        <item name="android:layout_marginTop">@dimen/dp8</item>
     </style>
 
 </resources>

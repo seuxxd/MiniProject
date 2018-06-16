@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">看我</string>
+    <string name="app_name">Pretty U</string>
+    <string name="subtitle">你自己的皮肤管理专家</string>
     <string name="button_login">登录</string>
     <string name="button_register">注册</string>
     <string name="other_login">第三方登录</string>
@@ -45,7 +46,52 @@
     <string name="skin_status">肌肤状况</string>
     <string name="play_big_data">我们一起玩转大数据探索肌肤的奥秘吧！</string>
     <string name="jump_to_look_me">看我！</string>
+    <string name="my_love">我的喜欢</string>
+
+
+    <string name="default_name">小蕊，你好！一起变美吧</string>
+    <string name="user_tutorial">使用教程?</string>
+    <string name="generate_report">生成报告</string>
+    <string name="make_pic_once">再拍一次</string>
+    <string name="user_title">肌肤检测使用教程</string>
+    <string name="use_pic">拍照测肤</string>
+    <string name="look_for_reminder">素颜测试皮肤更准确哦~</string>
+    <string name="use_carmae">相机拍摄</string>
+    <string name="use_default_carm">从相册选择</string>
+
+    <string name="please_select_pic">请选择图片</string>
+
+    <!--报告界面-->
+    <string name="report_reray">重测</string>
+    <string name="report_title">肌肤报告</string>
+    <string name="report_save">保存至本地</string>
+    <string name="default_poetry">人面桃花笑春风！</string>
+    <string name="report_total">综合</string>
+    <string name="report_states">肌肤状况</string>
+    <string name="report_question">问题</string>
+    <string name="report_question_1">色斑程度</string>
+    <string name="report_question_2">痘痘程度</string>
+    <string name="report_question_3">黑眼圈程度</string>
+    <string name="report_self">专属定制</string>
+    <string name="report_import_diary">导入日记</string>
+
+
+    <!--日记-->
     <string name="add_diary">新增日记</string>
     <string name="look_diary">查看日记</string>
-    <string name="my_love">我的喜欢</string>
+    <string name="my_like_diary">我的喜欢</string>
+
+    <string name="diary_food">饮食</string>
+    <string name="diary_sport">运动</string>
+    <string name="diary_other">其他</string>
+    <string name="diary_other_hint">熬夜，生理期，护肤品使用都可以记录哦！</string>
+    <string name="diary_mood">心情</string>
+    <string name="diary_pifu">肌肤感受</string>
+    <string name="diary_submit">提交</string>
+    <string name="diary_normal">一般</string>
+    <string name="diary_mood_good">超棒</string>
+    <string name="diary_mood_bad">糟糕</string>
+    <string name="diary_pifu_oil">太油</string>
+    <string name="diary_pifu_dry">干燥</string>
+    <string name="diary_muti_input">多行输入</string>
 </resources>

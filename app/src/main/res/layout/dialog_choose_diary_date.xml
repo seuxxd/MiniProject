@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:overlapAnchor="false"
+        android:id="@+id/diary_choose_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.AppCompatSpinner>
+    <TextView
+        android:id="@+id/year"
+        android:text="年"
+        android:layout_toEndOf="@id/diary_choose_year"
+        android:layout_alignTop="@id/diary_choose_year"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <android.support.v7.widget.AppCompatSpinner
+        android:overlapAnchor="false"
+        android:id="@+id/diary_choose_month"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/year"
+        android:layout_alignTop="@id/diary_choose_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.AppCompatSpinner>
+    <TextView
+        android:id="@+id/month"
+        android:text="月"
+        android:layout_alignTop="@id/diary_choose_year"
+        android:layout_toEndOf="@id/diary_choose_month"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:overlapAnchor="false"
+        android:id="@+id/diary_choose_day"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/month"
+        android:layout_alignTop="@id/diary_choose_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.AppCompatSpinner>
+    <TextView
+        android:id="@+id/day"
+        android:text="日"
+        android:layout_alignTop="@id/diary_choose_year"
+        android:layout_toEndOf="@id/diary_choose_day"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/diary_choose_close"
+        android:src="@mipmap/close"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toStartOf="@id/diary_choose_sure"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/diary_choose_sure"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:src="@mipmap/ok"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>
