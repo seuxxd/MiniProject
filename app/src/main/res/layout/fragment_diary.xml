@@ -69,36 +69,47 @@
             android:layout_height="300dp">
         </com.github.mikephil.charting.charts.LineChart>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_diary"
-        android:layout_margin="16dp"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/fab_menu"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        app:fab_addButtonColorNormal="@color/main_color"
+        app:fab_expandDirection="left"
+        app:fab_addButtonSize="mini"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_diary"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/main_color"
+            app:fab_title="@string/add_diary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            app:fab_colorNormal="@color/main_color"
+            app:fab_title="@string/look_diary"
+            app:fab_size="mini"
+            android:id="@+id/look_diary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/my_love"
+            app:fab_size="mini"
+            app:fab_title="@string/my_love"
+            app:fab_colorNormal="@color/main_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/look_diary"
-        android:layout_margin="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/add_diary"/>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/my_love"
-        android:layout_margin="16dp"
-        android:layout_toStartOf="@id/look_diary"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
 
     <Button
         android:id="@+id/jump_to_look_me"
         android:text="@string/jump_to_look_me"
         android:background="@drawable/main_look_btn_back"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/my_love"
+        android:layout_below="@id/chart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

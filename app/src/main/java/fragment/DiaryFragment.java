@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.seuxxd.miniproject.MainActivity;
 import com.example.seuxxd.miniproject.MyLoveActivity;
 import com.example.seuxxd.miniproject.R;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -90,7 +91,7 @@ public class DiaryFragment extends BaseFragment {
     }
 
     @BindView(R.id.add_diary)
-    FloatingActionButton mAddDiary;
+    com.getbase.floatingactionbutton.FloatingActionButton mAddDiary;
 //    新增日记，时间肯定是今天
     @OnClick(R.id.add_diary)
     public void addDiary(){
@@ -103,6 +104,7 @@ public class DiaryFragment extends BaseFragment {
         mWindow.setSubmitListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "onClick: addDiary");
                 mWindow.storeInfo(sp);
                 uploadDiary(mWindow);
                 mWindow.dismiss();
@@ -111,7 +113,7 @@ public class DiaryFragment extends BaseFragment {
     }
 //    查看日记，会有不同时间并且会点击上传日记功能
     @BindView(R.id.look_diary)
-    FloatingActionButton mLookDiaryButton;
+    com.getbase.floatingactionbutton.FloatingActionButton mLookDiaryButton;
     @OnClick(R.id.look_diary)
     public void lookDiary(){
         final View mDialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_choose_diary_date,null);
@@ -294,7 +296,7 @@ public class DiaryFragment extends BaseFragment {
     }
 
     @BindView(R.id.my_love)
-    FloatingActionButton mLoveButton;
+    com.getbase.floatingactionbutton.FloatingActionButton mLoveButton;
     @OnClick(R.id.my_love)
     public void loveButton(){
         Observable<Product[]> mObservable =
@@ -331,6 +333,9 @@ public class DiaryFragment extends BaseFragment {
             }
         });
     }
+
+    @BindView(R.id.fab_menu)
+    FloatingActionsMenu mFloatingActionsMenu;
 
     @Nullable
     @Override

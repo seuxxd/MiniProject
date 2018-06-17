@@ -3,6 +3,7 @@ package diary.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import utils.tools.DateUtils;
 
 public class AddDiaryPopupwindow extends PopupWindow {
 
+    private static final String TAG = "AddDiaryPopupwindow";
 
     private Context mContext;
     private View mView;
@@ -60,6 +62,7 @@ public class AddDiaryPopupwindow extends PopupWindow {
             @Override
             public void onClick(View view) {
                 storeInfo(sp);
+                close();
             }
         });
         setOnDismissListener(new OnDismissListener() {
@@ -95,7 +98,6 @@ public class AddDiaryPopupwindow extends PopupWindow {
                 .putString("other",getOtherEditText())
                 .putFloat("mood",getMoodStar())
                 .putFloat("skin",getSkinStar()).apply();
-        close();
     }
 
     /**
@@ -150,6 +152,7 @@ public class AddDiaryPopupwindow extends PopupWindow {
      * @return
      */
     public String getOtherEditText() {
+        Log.i(TAG, "getOtherEditText: " + mViewHolder.otherEdit.getText().toString().trim());
         return mViewHolder.otherEdit.getText().toString().trim();
     }
     public void setOtherEditText(String s){
