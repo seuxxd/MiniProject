@@ -124,7 +124,7 @@ public class MyCommentActivity extends AppCompatActivity {
         mRatingBar.setOnRatingChangeListener(new MaterialRatingBar.OnRatingChangeListener() {
             @Override
             public void onRatingChanged(MaterialRatingBar ratingBar, float rating) {
-                Toast.makeText(MyCommentActivity.this, "rating: " + rating, Toast.LENGTH_SHORT).show();
+
             }
         });
     }

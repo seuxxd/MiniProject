@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import adapter.ProductRecyclerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +47,10 @@ public class MyLoveActivity extends AppCompatActivity {
         UserLikeProducts p = mBundle.getParcelable("products");
         if (p != null){
             Product[] products = p.getProducts();
-            mRecyclerView.setAdapter(new ProductRecyclerAdapter(this,products,getSupportFragmentManager()));
+            List<Product> list = new ArrayList<>();
+            for (Product pro : products)
+                list.add(pro);
+            mRecyclerView.setAdapter(new ProductRecyclerAdapter(this,list,getSupportFragmentManager(),true));
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
     }

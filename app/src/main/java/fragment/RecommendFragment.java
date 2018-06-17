@@ -41,6 +41,7 @@ import eventbusmodel.JumpToLookMeTab;
 import eventbusmodel.UpdateProductAdapter;
 import httpclient.RetrofitClient;
 import internet.GetAllProducts;
+import internet.GetRecommendByParams;
 import internet.GetRecommendProducts;
 import internetmodel.product.Product;
 import internetmodel.product.ProductList;
@@ -70,6 +71,10 @@ public class RecommendFragment extends BaseFragment {
     private ProgressDialog mDialog;
 
     private Product[] mAllProducts;
+
+    private volatile int mFunctPosition = 0;
+    private volatile int mClazzPosition = 0;
+    private volatile int mPricePosition = 0;
 
     private static final String TAG = "RecommendFragment";
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -132,6 +137,7 @@ public class RecommendFragment extends BaseFragment {
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
                         .getString("username","admin");
         getRecommendProducts(mDialog, mUsername,"asc");
+        sortByServer();
     }
 
     private void getRecommendProducts(final ProgressDialog mDialog, String mUsername , String direction) {
@@ -153,12 +159,16 @@ public class RecommendFragment extends BaseFragment {
                     @Override
                     public void onNext(Product[] products) {
                         mAllProducts = products;
+                        List<Product> list = new ArrayList<>();
+                        for (Product p : products)
+                            list.add(p);
                         Log.i(TAG, "onNext: json : " + products);
                         //在这里开始传递数据，展示列表
                         mAdapter = new ProductRecyclerAdapter(
                                 getContext(),
-                                products,
-                                ((AppCompatActivity)getActivity()).getSupportFragmentManager());
+                                list,
+                                ((AppCompatActivity)getActivity()).getSupportFragmentManager(),
+                                false);
                         mRecyclerView.setAdapter(mAdapter);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     }
@@ -243,16 +253,8 @@ public class RecommendFragment extends BaseFragment {
         mFunctionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0 && mDialog != null){
-                    getRecommendProducts(mDialog,mUsername,"asc");
-                }
-                else if (position == 0)
-                    return;
-                else {
-                    sortProduct("func",position);
-                }
-
-
+                mFunctPosition = position;
+                sortByServer();
             }
 
             @Override
@@ -263,13 +265,8 @@ public class RecommendFragment extends BaseFragment {
         mClassSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0 && mDialog != null){
-                    getRecommendProducts(mDialog,mUsername,"asc");
-                }
-                else if (position == 0)
-                    return;
-                else
-                    sortProduct("clazz",position);
+                mClazzPosition = position;
+                sortByServer();
             }
 
             @Override
@@ -280,8 +277,8 @@ public class RecommendFragment extends BaseFragment {
         mPriceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mDialog != null)
-                    getRecommendProducts(mDialog,mUsername,position == 0 ? "asc" : "desc");
+                mPricePosition = position;
+                sortByServer();
             }
 
             @Override
@@ -289,6 +286,63 @@ public class RecommendFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private void sortByServer() {
+        Observable<Product[]> mObservable =
+                RetrofitClient
+                        .getInstance()
+                        .create(GetRecommendByParams.class)
+                        .getProductsByParams(
+                                "55",
+                                "55",
+                                "55",
+                                mUsername,
+                                mPricePosition == 0 ? "asc" : "desc",
+                                String.valueOf(mFunctPosition),
+                                String.valueOf(mClazzPosition));
+        Log.i(TAG, "sortByServer: " + mPricePosition);
+        Log.i(TAG, "sortByServer: " + mFunctPosition);
+        Log.i(TAG, "sortByServer: " + mClazzPosition);
+        mObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Product[]>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Product[] products) {
+                        Log.i(TAG, "onNext: " + Arrays.toString(products));
+                        List<Product> mList = new ArrayList<>();
+                        for (Product p : products)
+                            mList.add(p);
+                        ProductRecyclerAdapter mAdapter =
+                                new ProductRecyclerAdapter(
+                                        getContext(),
+                                        mList,
+                                        ((AppCompatActivity)getActivity()).getSupportFragmentManager(),
+                                        false);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mRecyclerView.setLayoutManager(
+                                new LinearLayoutManager(
+                                        getContext(),
+                                        LinearLayoutManager.VERTICAL,
+                                        false));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public void sortProduct(String type , int position) {
@@ -320,8 +374,9 @@ public class RecommendFragment extends BaseFragment {
         ProductRecyclerAdapter adapter =
                 new ProductRecyclerAdapter(
                         getContext(),
-                        list ,
-                        ((AppCompatActivity)getActivity()).getSupportFragmentManager());
+                        productList ,
+                        ((AppCompatActivity)getActivity()).getSupportFragmentManager(),
+                        false);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

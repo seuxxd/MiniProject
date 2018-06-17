@@ -15,6 +15,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.seuxxd.miniproject.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dialog.EvaluationDialog;
 import httpclient.RetrofitClient;
 import internet.AddLikeProduct;
@@ -35,7 +38,7 @@ import io.reactivex.schedulers.Schedulers;
 */
 public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecyclerAdapter.ViewHolder> {
 
-    private volatile Product[] mList;
+    private volatile List<Product> mList = new ArrayList<>();
 
     private Context mContext;
 
@@ -44,6 +47,8 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     private String mUsername;
 
     private volatile boolean isLike;
+
+    private boolean mNeedRemove;
 
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView mPosition;
@@ -68,8 +73,9 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     }
 
     public ProductRecyclerAdapter(Context context,
-                                  Product[] list,
-                                  FragmentManager manager){
+                                  List<Product> list,
+                                  FragmentManager manager,
+                                  boolean needRemove){
         super();
         mContext = context;
         mList = list;
@@ -79,6 +85,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
                         .getApplicationContext()
                         .getSharedPreferences("user",Context.MODE_PRIVATE)
                         .getString("username","empty");
+        mNeedRemove = needRemove;
 
     }
     @Override
@@ -92,7 +99,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Product mProduct = mList[position];
+        final Product mProduct = mList.get(position);
         holder.mPosition.setText(String.valueOf(position + 1));
         Glide.with(mContext).load(mProduct.getImgUrl()).into(holder.mProductImage);
         holder.mProductName.setText(mProduct.getName());
@@ -111,7 +118,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
                 if (!isLike)
                     addLikeProduct(mProduct,holder);
                 else
-                    deleteLikeProduct(mProduct,holder);
+                    deleteLikeProduct(mProduct,holder,position);
             }
         });
 //        查看评论
@@ -145,6 +152,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
                                 Toast.makeText(mContext, "添加成功！", Toast.LENGTH_SHORT).show();
                                 holder.mProductLike.setText("取消喜欢");
                                 mProduct.setIsMeFavorite("true");
+                                notifyDataSetChanged();
                                 break;
                             default:
                                 Toast.makeText(mContext, "添加失败！", Toast.LENGTH_SHORT).show();
@@ -167,7 +175,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     @Override
     public int getItemCount() {
-        return mList.length;
+        return mList.size();
     }
 
     /**
@@ -192,7 +200,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         mManager = manager;
     }
 
-    private void deleteLikeProduct(final Product product , final ViewHolder holder){
+    private void deleteLikeProduct(final Product product , final ViewHolder holder , final int position){
         Observable<RegisterResult> mObservable =
                 RetrofitClient
                         .getInstance()
@@ -213,6 +221,11 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
                             case "200":
                                 Toast.makeText(mContext, "取消喜欢成功", Toast.LENGTH_SHORT).show();
                                 product.setIsMeFavorite("false");
+                                if (mNeedRemove){
+                                    mList.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyDataSetChanged();
+                                }
                                 holder.mProductLike.setText("加入喜欢");
                                 break;
                             case "404":

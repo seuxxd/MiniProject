@@ -55,6 +55,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import utils.tools.DateUtils;
 
 /**
  * Created by SEUXXD on 2018/6/7.
@@ -98,7 +99,7 @@ public class DiaryFragment extends BaseFragment {
         mWindow.setSubmitListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadDiary();
+                uploadDiary(mWindow);
                 mWindow.dismiss();
             }
         });
@@ -108,9 +109,9 @@ public class DiaryFragment extends BaseFragment {
     @OnClick(R.id.look_diary)
     public void lookDiary(){
         final View mDialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_choose_diary_date,null);
-        final AppCompatSpinner mSpinnerYear = (AppCompatSpinner) mDialogView.findViewById(R.id.diary_choose_year);
-        final AppCompatSpinner mSpinnerMonth = (AppCompatSpinner) mDialogView.findViewById(R.id.diary_choose_month);
-        final AppCompatSpinner mSpinnerDay = (AppCompatSpinner) mDialogView.findViewById(R.id.diary_choose_day);
+        final Spinner mSpinnerYear = (Spinner) mDialogView.findViewById(R.id.diary_choose_year);
+        final Spinner mSpinnerMonth = (Spinner) mDialogView.findViewById(R.id.diary_choose_month);
+        final Spinner mSpinnerDay = (Spinner) mDialogView.findViewById(R.id.diary_choose_day);
 
 
         String[] years = new String[50];
@@ -122,12 +123,14 @@ public class DiaryFragment extends BaseFragment {
             months[i - 1] = String.valueOf(i);
 
         Date nowDate = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd", Locale.CHINA);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         String mTime = format.format(nowDate);
+        Log.i(TAG, "lookDiary: " + mTime);
         String[] mTimes = mTime.split("-");
-        mSpinnerYear.setSelection(Integer.valueOf(mTimes[0]) - 2018);
-        mSpinnerMonth.setSelection(Integer.valueOf(mTimes[1]) - 1);
-        mSpinnerDay.setSelection(Integer.valueOf(mTimes[2]));
+        Log.i(TAG, "lookDiary: " + mTimes[0]);
+        Log.i(TAG, "lookDiary: " + mTimes[1]);
+        Log.i(TAG, "lookDiary: " + mTimes[2]);
+
         mSpinnerYear.setAdapter(
                 new ArrayAdapter<String>(
                         getContext(),
@@ -204,6 +207,13 @@ public class DiaryFragment extends BaseFragment {
         });
 
 
+//        int year = Integer.valueOf(mTimes[0]) - 2018;
+//        int month = Integer.valueOf(mTimes[1]) - 1;
+//        int day = Integer.valueOf(mTimes[2]);
+//        mSpinnerYear.setSelection(year,true);
+//        mSpinnerMonth.setSelection(month,true);
+//        mSpinnerDay.setSelection(day,true);
+
         ImageView mCloseView = (ImageView) mDialogView.findViewById(R.id.diary_choose_close);
         ImageView mSureView = (ImageView) mDialogView.findViewById(R.id.diary_choose_sure);
         mCloseView.setOnClickListener(new View.OnClickListener() {
@@ -216,15 +226,28 @@ public class DiaryFragment extends BaseFragment {
         mSureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick: " + mSpinnerYear.isSelected() + mSpinnerMonth.isSelected() + mSpinnerDay.isSelected());
-                if (!mSpinnerYear.isSelected() || !mSpinnerMonth.isSelected() || !mSpinnerDay.isSelected()){
-                    Toast.makeText(getContext(), "请选择确切日期", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mDate = (mSpinnerYear.getSelectedItemPosition() + 2018)
-                        + "-"
-                        + (mSpinnerMonth.getSelectedItemPosition() + 1)
-                        + "-" + mSpinnerDay.getSelectedItemPosition();
+                Log.i(TAG, "onClick: " +
+                        mSpinnerYear.getSelectedItemPosition() +
+                        mSpinnerMonth.getSelectedItemPosition() +
+                        mSpinnerDay.getSelectedItemPosition());
+//                if (!mSpinnerYear.isSelected() || !mSpinnerMonth.isSelected() || !mSpinnerDay.isSelected()){
+//                    Toast.makeText(getContext(), "请选择确切日期", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+                int month = mSpinnerMonth.getSelectedItemPosition() + 1;
+                String temp1,temp2;
+                if (month < 10)
+                    temp1 = "0" + month;
+                else
+                    temp1 = "" + month;
+                int day = mSpinnerDay.getSelectedItemPosition() + 1;
+                if (day < 10)
+                    temp2 = "0" + day;
+                else
+                    temp2 = "" + day;
+                mDate = (mSpinnerYear.getSelectedItemPosition() + 2018) + "-" + temp1 + "-" + temp2;
+                Log.i(TAG, "onClick: " + mDate);
+                Log.i(TAG, "onClick: " + mUsername);
                 Observable<DiaryInfo> mObservable =
                         RetrofitClient
                                 .getInstance()
@@ -241,14 +264,18 @@ public class DiaryFragment extends BaseFragment {
 
                             @Override
                             public void onNext(DiaryInfo diaryInfo) {
+                                Log.i(TAG, "onNext: " + diaryInfo);
                                 AddDiaryPopupwindow addDiaryPopupwindow = new AddDiaryPopupwindow(getContext());
                                 View mView = LayoutInflater.from(getContext()).inflate(R.layout.add_diary,null);
-                                addDiaryPopupwindow.setFoodEditText(diaryInfo.getFood());
-                                addDiaryPopupwindow.setSportEditText(diaryInfo.getSport());
-                                addDiaryPopupwindow.setOtherEditText(diaryInfo.getOthers());
-                                addDiaryPopupwindow.setMoodStar(Float.parseFloat(diaryInfo.getEmotion()));
-                                addDiaryPopupwindow.setSkinStar(Float.parseFloat(diaryInfo.getSkinState()));
+//                                addDiaryPopupwindow.setTime(diaryInfo.getDate());
+                                addDiaryPopupwindow.setFoodEditText(diaryInfo.getFood() == null ? "" : diaryInfo.getFood());
+                                addDiaryPopupwindow.setSportEditText(diaryInfo.getSport() == null ? "" : diaryInfo.getSport());
+                                addDiaryPopupwindow.setOtherEditText(diaryInfo.getOthers() == null ? "" : diaryInfo.getOthers());
+                                addDiaryPopupwindow.setMoodStar(Float.parseFloat(diaryInfo.getEmotion() == null ? "1" : diaryInfo.getEmotion()));
+                                addDiaryPopupwindow.setSkinStar(Float.parseFloat(diaryInfo.getSkinState() == null ? "1" : diaryInfo.getSkinState()));
                                 addDiaryPopupwindow.show(mView);
+                                if (mDialog.isShowing())
+                                    mDialog.dismiss();
                             }
 
                             @Override
@@ -407,23 +434,23 @@ public class DiaryFragment extends BaseFragment {
     /**
      * 上传日记功能
      */
-    private void uploadDiary(){
+    private void uploadDiary(AddDiaryPopupwindow window){
         Observable<RegisterResult> mObservable =
                 RetrofitClient
                         .getInstance()
                         .create(AddDiaryService.class)
                         .addDiary(
                                 mUsername,
+                                window.getFoodEditText(),
+                                window.getSportEditText(),
+                                window.getOtherEditText(),
+                                String.valueOf(window.getMoodStar()),
+                                String.valueOf(window.getSkinStar()),
                                 "1",
                                 "1",
                                 "1",
                                 "1",
-                                "1",
-                                "1",
-                                "1",
-                                "1",
-                                "1",
-                                "1111-11-11");
+                                window.getDate());
         mObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

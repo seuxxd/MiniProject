@@ -189,8 +189,14 @@ public class AddDiaryPopupwindow extends PopupWindow {
         }
     }
 
+    public void setTime(String date){
+        mViewHolder.time.setText(date);
+    }
     public void setTime(Date date){
         mViewHolder.time.setText(DateUtils.setDate(date));
+    }
+    public String getDate(){
+        return mViewHolder.time.getText().toString();
     }
 
     /**
