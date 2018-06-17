@@ -2,6 +2,7 @@ package utils.tools;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by mr.gao on 2018/6/13.
@@ -15,7 +16,7 @@ public class DateUtils {
 
 
     public static String setDate(Date date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return format.format(date);
     }
 }

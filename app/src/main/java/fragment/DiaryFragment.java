@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
@@ -24,6 +25,7 @@ import com.example.seuxxd.miniproject.MainActivity;
 import com.example.seuxxd.miniproject.MyLoveActivity;
 import com.example.seuxxd.miniproject.R;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -88,24 +90,28 @@ public class DiaryFragment extends BaseFragment {
     }
 
     @BindView(R.id.add_diary)
-    Button mAddDiary;
+    FloatingActionButton mAddDiary;
+//    新增日记，时间肯定是今天
     @OnClick(R.id.add_diary)
     public void addDiary(){
         final AddDiaryPopupwindow mWindow = new AddDiaryPopupwindow(getContext());
         mWindow.setTime(new Date());
+        //获取今天本地保存副本的内容
         mWindow.restoreInfo(sp);
         View mView = LayoutInflater.from(getContext()).inflate(R.layout.add_diary,null);
         mWindow.show(mView);
         mWindow.setSubmitListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mWindow.storeInfo(sp);
                 uploadDiary(mWindow);
                 mWindow.dismiss();
             }
         });
     }
+//    查看日记，会有不同时间并且会点击上传日记功能
     @BindView(R.id.look_diary)
-    Button mLookDiaryButton;
+    FloatingActionButton mLookDiaryButton;
     @OnClick(R.id.look_diary)
     public void lookDiary(){
         final View mDialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_choose_diary_date,null);
@@ -122,15 +128,95 @@ public class DiaryFragment extends BaseFragment {
         for (int i = 1 ; i <= 12 ; i ++)
             months[i - 1] = String.valueOf(i);
 
-        Date nowDate = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        String mTime = format.format(nowDate);
-        Log.i(TAG, "lookDiary: " + mTime);
-        String[] mTimes = mTime.split("-");
-        Log.i(TAG, "lookDiary: " + mTimes[0]);
-        Log.i(TAG, "lookDiary: " + mTimes[1]);
-        Log.i(TAG, "lookDiary: " + mTimes[2]);
 
+        initSpinner(mSpinnerYear, mSpinnerMonth, mSpinnerDay, years, months);
+
+
+
+        ImageView mCloseView = (ImageView) mDialogView.findViewById(R.id.diary_choose_close);
+        ImageView mSureView = (ImageView) mDialogView.findViewById(R.id.diary_choose_sure);
+        mCloseView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDialog != null)
+                    mDialog.dismiss();
+            }
+        });
+        mSureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: " +
+                        mSpinnerYear.getSelectedItemPosition() +
+                        mSpinnerMonth.getSelectedItemPosition() +
+                        mSpinnerDay.getSelectedItemPosition());
+                int month = mSpinnerMonth.getSelectedItemPosition() + 1;
+                String temp1,temp2;
+                if (month < 10)
+                    temp1 = "0" + month;
+                else
+                    temp1 = "" + month;
+                int day = mSpinnerDay.getSelectedItemPosition() + 1;
+                if (day < 10)
+                    temp2 = "0" + day;
+                else
+                    temp2 = "" + day;
+                mDate = (mSpinnerYear.getSelectedItemPosition() + 2018) + "-" + temp1 + "-" + temp2;
+                Log.i(TAG, "onClick: " + mDate);
+                Log.i(TAG, "onClick: " + mUsername);
+                Observable<DiaryInfo> mObservable =
+                        RetrofitClient
+                                .getInstance()
+                                .create(GetOneDiary.class)
+                                .getOneDiary(mUsername,mDate);
+                mObservable
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<DiaryInfo>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(DiaryInfo diaryInfo) {
+                                Log.i(TAG, "onNext: " + diaryInfo);
+                                final AddDiaryPopupwindow addDiaryPopupwindow = new AddDiaryPopupwindow(getContext());
+                                View mView = LayoutInflater.from(getContext()).inflate(R.layout.add_diary,null);
+                                addDiaryPopupwindow.setTime(diaryInfo.getDate());
+                                addDiaryPopupwindow.setFoodEditText(diaryInfo.getFood() == null ? "" : diaryInfo.getFood());
+                                addDiaryPopupwindow.setSportEditText(diaryInfo.getSport() == null ? "" : diaryInfo.getSport());
+                                addDiaryPopupwindow.setOtherEditText(diaryInfo.getOthers() == null ? "" : diaryInfo.getOthers());
+                                addDiaryPopupwindow.setMoodStar(Float.parseFloat(diaryInfo.getEmotion() == null ? "1" : diaryInfo.getEmotion()));
+                                addDiaryPopupwindow.setSkinStar(Float.parseFloat(diaryInfo.getSkinState() == null ? "1" : diaryInfo.getSkinState()));
+                                addDiaryPopupwindow.show(mView);
+                                addDiaryPopupwindow.setSubmitListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        uploadDiary(addDiaryPopupwindow);
+                                    }
+                                });
+                                if (mDialog.isShowing())
+                                    mDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            }
+        });
+        mDialog = new AlertDialog.Builder(getContext(),R.style.Dialog_FullScreen).setView(mDialogView).create();
+        mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        mDialog.show();
+    }
+
+    public void initSpinner(Spinner mSpinnerYear, final Spinner mSpinnerMonth, final Spinner mSpinnerDay, String[] years, final String[] months) {
         mSpinnerYear.setAdapter(
                 new ArrayAdapter<String>(
                         getContext(),
@@ -205,98 +291,10 @@ public class DiaryFragment extends BaseFragment {
 
             }
         });
-
-
-//        int year = Integer.valueOf(mTimes[0]) - 2018;
-//        int month = Integer.valueOf(mTimes[1]) - 1;
-//        int day = Integer.valueOf(mTimes[2]);
-//        mSpinnerYear.setSelection(year,true);
-//        mSpinnerMonth.setSelection(month,true);
-//        mSpinnerDay.setSelection(day,true);
-
-        ImageView mCloseView = (ImageView) mDialogView.findViewById(R.id.diary_choose_close);
-        ImageView mSureView = (ImageView) mDialogView.findViewById(R.id.diary_choose_sure);
-        mCloseView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mDialog != null)
-                    mDialog.dismiss();
-            }
-        });
-        mSureView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: " +
-                        mSpinnerYear.getSelectedItemPosition() +
-                        mSpinnerMonth.getSelectedItemPosition() +
-                        mSpinnerDay.getSelectedItemPosition());
-//                if (!mSpinnerYear.isSelected() || !mSpinnerMonth.isSelected() || !mSpinnerDay.isSelected()){
-//                    Toast.makeText(getContext(), "请选择确切日期", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-                int month = mSpinnerMonth.getSelectedItemPosition() + 1;
-                String temp1,temp2;
-                if (month < 10)
-                    temp1 = "0" + month;
-                else
-                    temp1 = "" + month;
-                int day = mSpinnerDay.getSelectedItemPosition() + 1;
-                if (day < 10)
-                    temp2 = "0" + day;
-                else
-                    temp2 = "" + day;
-                mDate = (mSpinnerYear.getSelectedItemPosition() + 2018) + "-" + temp1 + "-" + temp2;
-                Log.i(TAG, "onClick: " + mDate);
-                Log.i(TAG, "onClick: " + mUsername);
-                Observable<DiaryInfo> mObservable =
-                        RetrofitClient
-                                .getInstance()
-                                .create(GetOneDiary.class)
-                                .getOneDiary(mUsername,mDate);
-                mObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<DiaryInfo>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(DiaryInfo diaryInfo) {
-                                Log.i(TAG, "onNext: " + diaryInfo);
-                                AddDiaryPopupwindow addDiaryPopupwindow = new AddDiaryPopupwindow(getContext());
-                                View mView = LayoutInflater.from(getContext()).inflate(R.layout.add_diary,null);
-//                                addDiaryPopupwindow.setTime(diaryInfo.getDate());
-                                addDiaryPopupwindow.setFoodEditText(diaryInfo.getFood() == null ? "" : diaryInfo.getFood());
-                                addDiaryPopupwindow.setSportEditText(diaryInfo.getSport() == null ? "" : diaryInfo.getSport());
-                                addDiaryPopupwindow.setOtherEditText(diaryInfo.getOthers() == null ? "" : diaryInfo.getOthers());
-                                addDiaryPopupwindow.setMoodStar(Float.parseFloat(diaryInfo.getEmotion() == null ? "1" : diaryInfo.getEmotion()));
-                                addDiaryPopupwindow.setSkinStar(Float.parseFloat(diaryInfo.getSkinState() == null ? "1" : diaryInfo.getSkinState()));
-                                addDiaryPopupwindow.show(mView);
-                                if (mDialog.isShowing())
-                                    mDialog.dismiss();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
-            }
-        });
-        mDialog = new AlertDialog.Builder(getContext(),R.style.Dialog_FullScreen).setView(mDialogView).create();
-        mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        mDialog.show();
     }
 
     @BindView(R.id.my_love)
-    Button mLoveButton;
+    FloatingActionButton mLoveButton;
     @OnClick(R.id.my_love)
     public void loveButton(){
         Observable<Product[]> mObservable =
@@ -345,7 +343,6 @@ public class DiaryFragment extends BaseFragment {
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
                         .getString("username","empty");
         final LineChart mChart = mView.findViewById(R.id.chart);
-
         sp = getContext().getSharedPreferences("diary",Context.MODE_PRIVATE);
         final Spinner mDaySpinner = mView.findViewById(R.id.chart_day);
         final Spinner mClassSpinner = mView.findViewById(R.id.chart_class);
@@ -451,6 +448,7 @@ public class DiaryFragment extends BaseFragment {
                                 "1",
                                 "1",
                                 window.getDate());
+        Log.i(TAG, "uploadDiary: " + window.getDate());
         mObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -514,6 +512,8 @@ public class DiaryFragment extends BaseFragment {
                     @Override
                     public void onNext(DiaryInfo[] diaryInfos) {
                         datas = new String[diaryInfos.length];
+                        XAxis x = chart.getXAxis();
+                        x.setLabelCount(diaryInfos.length - 1);
                         for (int i = 0 ; i < diaryInfos.length ; i ++){
                             switch (clazz){
                                 case "cp":
