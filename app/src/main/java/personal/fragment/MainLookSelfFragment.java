@@ -1,5 +1,6 @@
 package personal.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,13 +8,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.seuxxd.miniproject.R;
-import com.example.seuxxd.miniproject.StartActivity;
 
-
+import java.io.File;
 import java.util.ArrayList;
 
 import base.fragment.BaseFragment;
@@ -36,6 +37,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class MainLookSelfFragment extends BaseFragment implements LookView {
 
+    public static File ImageFile = null;
+    public static String ImagePath = null;
 
     @BindView(R.id.headViewImg)
     ImageView headViewImg;
@@ -44,13 +47,13 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
     @BindView(R.id.header)
     LinearLayout header;
     @BindView(R.id.useCameraBtn)
-    Button useCameraBtn;
+    Button useCameraBtn;    //拍照测肤
     @BindView(R.id.makeReportBtn)
-    Button makeReportBtn;
+    Button makeReportBtn;    //生成报告
     @BindView(R.id.generation_ReportLayout)
     LinearLayout generationReportLayout;
     @BindView(R.id.lookMainImg)
-    ImageView lookMainImg;
+    ImageView lookMainImg;    //拍照后选择本地图片存取的照片
 
     private boolean mSelectPic = false;
 
@@ -146,6 +149,9 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                         data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
 
                 if (photos.size() > 0) {
+                    //获取第一张照片
+                    ImageFile=new File(photos.get(0));     //将照片封装成一个File
+                    ImagePath = photos.get(0);       //照片的路径
                     showCenterPic(photos.get(0));
                     mSelectPic = true;
                 }
@@ -164,8 +170,16 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                 break;
             case R.id.makeReportBtn:
                 if (mSelectPic) {
-//                    showToast("图片选好了");
+//                  showToast("图片选好了");
+                    //Context context = getApplicationContext();
+                    // Toast.makeText(context,"截图失败",Toast.LENGTH_SHORT).show();
+                    //Toast toast = Toast.makeText(ToastDemoActivity.this, "这是一个普通的Toast!", Toast.LENGTH_SHORT);
+                    // toast.show();
+
                     startActivity(new Intent(getActivity(), ReportActivity.class));
+
+
+
                 } else {
                     showToast(getString(R.string.please_select_pic));
                 }
@@ -175,3 +189,6 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
         }
     }
 }
+
+
+

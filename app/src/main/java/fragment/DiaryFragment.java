@@ -448,6 +448,9 @@ public class DiaryFragment extends BaseFragment {
                                 "1",
                                 "1",
                                 window.getDate());
+        Log.i(TAG, "uploadDiary: " + window.getFoodEditText());
+        Log.i(TAG, "uploadDiary: " + window.getSportEditText());
+        Log.i(TAG, "uploadDiary: " + window.getOtherEditText());
         Log.i(TAG, "uploadDiary: " + window.getDate());
         mObservable
                 .subscribeOn(Schedulers.io())

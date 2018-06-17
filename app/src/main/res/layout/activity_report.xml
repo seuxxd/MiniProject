@@ -53,7 +53,7 @@
             android:layout_marginLeft="@dimen/dp10"
             android:layout_marginTop="@dimen/dp10"
             android:layout_toRightOf="@id/headerView"
-            android:text="@string/default_name"
+            android:text="@string/default_time"
             android:textSize="@dimen/text_size_10sp"/>
 
 
@@ -132,7 +132,7 @@
                     android:clickable="true"
                     android:isIndicator="true"
                     android:numStars="5"
-                    android:rating="3"
+                    android:rating="1"
                     android:stepSize="1"/>
             </LinearLayout>
 
@@ -162,7 +162,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/report_question_1"/>
+                        android:text="@string/report_question_1" />
 
                     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
                         android:id="@+id/progressBarOne"
@@ -179,6 +179,14 @@
                         app:rcSecondaryProgressColor="@android:color/white">
 
                     </com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar>
+
+                    <TextView
+                        android:id="@+id/stainTextView"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="0dp"
+                        android:text="@string/stainValue" />
+
+
                 </TableRow>
 
                 <TableRow android:layout_marginTop="@dimen/dp10">
@@ -203,6 +211,13 @@
                         app:rcSecondaryProgressColor="@android:color/white">
 
                     </com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar>
+
+                    <TextView
+                        android:id="@+id/acneTextView"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="0dp"
+                        android:text="@string/acneValue" />
+
                 </TableRow>
 
                 <TableRow
@@ -228,6 +243,13 @@
                         app:rcSecondaryProgressColor="@android:color/white">
 
                     </com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar>
+
+                    <TextView
+                        android:id="@+id/dark_circleTextView"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="0dp"
+                        android:text="@string/dark_circleValue" />
+
                 </TableRow>
             </TableLayout>
 

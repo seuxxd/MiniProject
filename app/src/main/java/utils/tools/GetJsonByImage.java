@@ -9,12 +9,14 @@ import java.util.HashMap;
 
 public class GetJsonByImage {
     public static String Json = null;    //Json值
+    public static String oldJson = null;   //Json的上一次值
 
     /*
     一个APP如果在主线程中请求网络操作，将会抛出异常。Android这个设计是为了防止网络请求时间过长而导致界面假死的情况发生。
     解决方案有两个，一个是使用StrictMode，二是使用线程来操作网络请求。
     这里使用线程来操作网络请求。
      */
+
     public static HashMap<String,String> getJsonByFaceApi(final File file) throws InterruptedException, JSONException {     //开启一个线程，用来进行网络请求，并返回Json串，Json串为String格式
 
         new Thread(new Runnable(){
@@ -24,13 +26,15 @@ public class GetJsonByImage {
             }
         }).start();
 
-        while(Json == null){    //等待网络Json串返回，然后继续执行，保证Json不为空
+        while(Json == oldJson || Json == null){    //等待网络Json串返回，然后继续执行，保证Json不为空，同时还不能与上一次Json串一致
             Thread.sleep(500);
             //System.out.println("Json is null,waiting");
         }
 
-        System.out.println("we get the response Json:" + Json);
+        //此时Json != oldJson
+        oldJson = Json;
 
+        System.out.println("we get the response Json:" + Json);
         HashMap<String,String> resultMap = resolveJson();
 
         return resultMap;
@@ -67,7 +71,7 @@ public class GetJsonByImage {
             String stain = skinstatus.getString("stain");
             String acne = skinstatus.getString("acne");
             String health = skinstatus.getString("health");
-            System.out.println("skinstatus:" + dark_circle + " " + stain + " " + acne+ " " + health);
+            System.out.println("skinstatus:" + health + " " + stain + " " + acne+ " " + dark_circle);
 
             JSONObject smile = attributes.getJSONObject("smile");
             String smilethreshold = smile.getString("threshold");
@@ -102,7 +106,6 @@ public class GetJsonByImage {
         }
         return resultMap;
     }
-
 
 
 }

@@ -35,6 +35,8 @@ import utils.tools.DateUtils;
  */
 
 public class AddDiaryPopupwindow extends PopupWindow {
+
+
     private Context mContext;
     private View mView;
     private ViewHolder mViewHolder;

@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword 'xxd!1216'
-            storeFile file('D:/Project/MiniProject/mini.jks')
+            storeFile file('D:/Android-project/MiniProject/mini.jks')
             storePassword 'xxd!1216'
         }
     }
@@ -67,4 +67,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation files('libs/open_sdk_r6008_lite.jar')
     implementation files('libs/mta-sdk-1.6.2.jar')
+    compile 'com.getbase:floatingactionbutton:1.10.1'
 }

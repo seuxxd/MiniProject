@@ -49,7 +49,6 @@
     <string name="my_love">我的喜欢</string>
 
 
-    <string name="default_name">小蕊，你好！一起变美吧</string>
     <string name="user_tutorial">使用教程?</string>
     <string name="generate_report">生成报告</string>
     <string name="make_pic_once">再拍一次</string>
@@ -94,4 +93,11 @@
     <string name="diary_pifu_oil">太油</string>
     <string name="diary_pifu_dry">干燥</string>
     <string name="diary_muti_input">多行输入</string>
+
+
+    <string name="default_name">你好！一起变美吧</string>
+    <string name="default_time">2018/6/17</string>
+    <string name="stainValue">10%</string>
+    <string name="acneValue">20%</string>
+    <string name="dark_circleValue">30%</string>
 </resources>
