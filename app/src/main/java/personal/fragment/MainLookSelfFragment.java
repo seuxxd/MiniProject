@@ -81,6 +81,7 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
         return fragment;
     }
 
+
     @Override
     public int setLayoutResouceId() {
         if (!mSelectPic)
