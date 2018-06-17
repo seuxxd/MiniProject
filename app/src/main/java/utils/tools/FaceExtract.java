@@ -54,8 +54,7 @@ public class FaceExtract {
         byteMap.put("image_file", buff);
         try{
             byte[] bacd = post(url, map, byteMap);    //获取Json，格式为byte[]
-            String str = new String(bacd);   //转化为String类型
-            return str;    //返回Json
+            return new String(bacd);   //转化为String类 返回Json
         }catch (Exception e) {
             e.printStackTrace();
         }

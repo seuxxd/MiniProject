@@ -69,16 +69,16 @@
             />
 
 
-        <ImageView
-            android:id="@+id/closeImg"
-            android:layout_width="@dimen/dp16"
-            android:layout_height="@dimen/dp16"
-            android:layout_alignRight="@id/userImage"
-            android:layout_alignTop="@id/userImage"
-            android:layout_below="@id/headerView"
-            android:layout_marginRight="@dimen/dp8"
-            android:layout_marginTop="@dimen/dp8"
-            android:src="@mipmap/close"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/closeImg"-->
+            <!--android:layout_width="@dimen/dp16"-->
+            <!--android:layout_height="@dimen/dp16"-->
+            <!--android:layout_alignRight="@id/userImage"-->
+            <!--android:layout_alignTop="@id/userImage"-->
+            <!--android:layout_below="@id/headerView"-->
+            <!--android:layout_marginRight="@dimen/dp8"-->
+            <!--android:layout_marginTop="@dimen/dp8"-->
+            <!--android:src="@mipmap/close"/>-->
 
 
         <TextView

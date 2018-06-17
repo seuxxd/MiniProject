@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,9 +31,12 @@ import fragment.DiaryFragment;
 import fragment.RecommendFragment;
 import internetmodel.register.User;
 import personal.fragment.MainLookSelfFragment;
+import report.activity.ReportActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    public static final String TAG = "MainActivity";
 //    三个fragment
     private MainLookSelfFragment mMainLookSelfFragment = new MainLookSelfFragment();
     private RecommendFragment mRecommendFragment = new RecommendFragment();
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private boolean isFirstLogin = false;
+    public static boolean isFirstLogin = true;
 
 //    保存fragment的列表
     List<Fragment> mFragmentList;
@@ -155,6 +159,31 @@ public class MainActivity extends AppCompatActivity {
             case KeyEvent.ACTION_DOWN:
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.i(TAG, "onNewIntent: ");
+        if (intent != null){
+            String mDest = intent.getStringExtra("dest");
+            if (mDest != null){
+                switch (mDest){
+                    case ReportActivity.JUMP_TO_DIARY:
+                        Log.i(TAG, "onNewIntent: diary");
+                        mTabLayout.getTabAt(2).select();
+                        break;
+                    case ReportActivity.JUMP_TO_RECOMMEND:
+                        Log.i(TAG, "onNewIntent: recommend");
+                        mTabLayout.getTabAt(0).select();
+                        EventBus.getDefault().post(new UpdateProductAdapter());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     @Override

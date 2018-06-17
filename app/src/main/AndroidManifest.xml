@@ -25,7 +25,9 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <!-- 首页 -->
         <activity
             android:name=".StartActivity"

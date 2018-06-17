@@ -1,9 +1,11 @@
 package report.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -16,12 +18,16 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.bumptech.glide.Glide;
+import com.example.seuxxd.miniproject.MainActivity;
 import com.example.seuxxd.miniproject.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,12 +35,20 @@ import java.util.HashMap;
 import base.activity.BaseActivity;
 import butterknife.BindView;
 import butterknife.OnClick;
+import commonmodels.SkinInfo;
 import personal.fragment.MainLookSelfFragment;
+import utils.tools.FaceExtract;
 import utils.tools.GetJsonByImage;
 import utils.view.LucklyToolbar;
 
 public class ReportActivity extends BaseActivity {
 
+
+    public static final String JUMP_TO_RECOMMEND = "recommend";
+    public static final String JUMP_TO_DIARY = "diary";
+
+
+    private static final String TAG = "ReportActivity";
     @BindView(R.id.toolbar)
     LucklyToolbar toolbar;
     @BindView(R.id.headerView)
@@ -45,8 +59,8 @@ public class ReportActivity extends BaseActivity {
     TextView timeTv;
     @BindView(R.id.userImage)
     ImageView userImage;     //用户自拍头像
-    @BindView(R.id.closeImg)
-    ImageView closeImg;      //关闭头像
+//    @BindView(R.id.closeImg)
+//    ImageView closeImg;      //关闭头像
     @BindView(R.id.poetryTv)
     TextView poetryTv;     //诗句
     @BindView(R.id.ratingBar)
@@ -97,7 +111,7 @@ public class ReportActivity extends BaseActivity {
             }
         });
         String imagePath = MainLookSelfFragment.ImagePath;
-        File imageFile = MainLookSelfFragment.ImageFile;
+        final File imageFile = MainLookSelfFragment.ImageFile;
 
         System.out.println("imagePath: " + imagePath + " imageFile :" + imageFile);
 
@@ -105,33 +119,41 @@ public class ReportActivity extends BaseActivity {
         //Glide.with(this).load(R.drawable.main_placeholder).into(userImage);
         Glide.with(this).load(imagePath).into(userImage);
 
-        HashMap<String,String> resultMap = null;
 
-        try {
-            resultMap = GetJsonByImage.getJsonByFaceApi(imageFile);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+
+
+        Intent mSkinIntent = getIntent();
+        SkinInfo mInfo = mSkinIntent.getParcelableExtra("skin");
+        float healthValue , stainValue , acneValue , dark_circle;
+        if (mInfo != null){
+            healthValue = Float.parseFloat(mInfo.getHealth());   //健康
+            stainValue  =  Float.parseFloat(mInfo.getStain());    //色斑
+            acneValue   =  Float.parseFloat(mInfo.getAcne());      //青春痘
+            dark_circle =  Float.parseFloat(mInfo.getDark_circle());     //黑眼圈
         }
+        else {
+            healthValue = 0;
+            stainValue = 0;
+            acneValue = 0;
+            dark_circle = 0;
+        }
+//
 
-
-        float healthValue = Float.parseFloat(resultMap.get("health"));   //健康
-        float stainValue =  Float.parseFloat(resultMap.get("stain"));    //色斑
-        float acneValue =  Float.parseFloat(resultMap.get("acne"));      //青春痘
-        float dark_circle =  Float.parseFloat(resultMap.get("dark_circle"));     //黑眼圈
-
+//
         float numstart = 3.0f;
         numstart += (healthValue / 25);
         if(numstart >= 5) numstart = 5;
-
-        System.out.println("getDetail: " + numstart + " " + healthValue + " " + stainValue + " " + acneValue + " " + dark_circle);
-
+//
+//        System.out.println("getDetail: " + numstart + " " + healthValue + " " + stainValue + " " + acneValue + " " + dark_circle);
+//
         headerView.setImageResource(R.drawable.main_placeholder);
-
+//
         long time = System.currentTimeMillis();
         Date date = new Date(time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
         timeTv.setText(format.format(date));
-
+//
         ratingBar.setRating(numstart);
         progressBarOne.setProgress(stainValue);     //色斑程度
         stainTextView.setText((int)(stainValue) + "%");
@@ -142,14 +164,22 @@ public class ReportActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.closeImg, R.id.reportSelf, R.id.importDrary})
+    @OnClick({R.id.reportSelf, R.id.importDrary})
     public void onViewClicked(View view) {
+        Intent mIntent = new Intent(ReportActivity.this, MainActivity.class);
         switch (view.getId()) {
-            case R.id.closeImg:
-                break;
             case R.id.reportSelf:
+//                跳转到专属定制
+                mIntent.putExtra("dest",JUMP_TO_RECOMMEND);
+                startActivity(mIntent);
+                finish();
                 break;
             case R.id.importDrary:
+//                跳转至美丽日记并且加载进界面
+                mIntent.putExtra("dest",JUMP_TO_DIARY);
+                startActivity(mIntent);
+                finish();
+
                 break;
         }
     }
