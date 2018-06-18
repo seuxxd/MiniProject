@@ -339,9 +339,17 @@ public class DiaryFragment extends BaseFragment {
     @BindView(R.id.fab_menu)
     FloatingActionsMenu mFloatingActionsMenu;
 
+
+    @BindView(R.id.chart_day)
+    Spinner mDaySpinner;
+    @BindView(R.id.chart_class)
+    Spinner mClassSpinner;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView: ");
         View mView = inflater.inflate(R.layout.fragment_diary,null,false);
         unbinder = ButterKnife.bind(this,mView);
 
@@ -353,28 +361,43 @@ public class DiaryFragment extends BaseFragment {
         CircleImageView mCircleView = mView.findViewById(R.id.user_img);
         Glide.with(getContext()).load(R.drawable.main_placeholder).into(mCircleView);
         sp = getContext().getSharedPreferences("diary",Context.MODE_PRIVATE);
-        final Spinner mDaySpinner = mView.findViewById(R.id.chart_day);
-        final Spinner mClassSpinner = mView.findViewById(R.id.chart_class);
+
+
         String[] mDays = {"选择时间","近7天","近30天","近90天"};
         String[] mClass = {"肌肤问题","痘痘","黑眼圈","色斑"};
-        mDaySpinner.setAdapter(
+        ArrayAdapter<String> mDayAdapter =
                 new ArrayAdapter<String>(
                         getContext(),
                         android.R.layout.simple_spinner_dropdown_item,
-                        mDays));
-        mClassSpinner.setAdapter(
+                        mDays);
+        ArrayAdapter<String> mClassAdapter =
                 new ArrayAdapter<String>(
                         getContext(),
                         android.R.layout.simple_spinner_dropdown_item,
-                        mClass));
+                        mClass);
+        mDaySpinner.setAdapter(mDayAdapter);
+        mDayAdapter.notifyDataSetChanged();
+        mClassSpinner.setAdapter(mClassAdapter);
+        mClassAdapter.notifyDataSetChanged();
+
+        Log.i(TAG, "onCreateView: setSelection");
+        mDaySpinner.setSelection(0,true);
+        mClassSpinner.setSelection(0,true);
+        mDaySpinner.invalidate();
+        mClassSpinner.invalidate();
         mClassSpinner.setClickable(false);
+        mClassSpinner.setEnabled(false);
         mDaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0)
+                if (position == 0){
+                    mClassSpinner.setSelection(0,true);
+                    mClassSpinner.setEnabled(false);
                     return;
+                }
                 else {
                     mClassSpinner.setClickable(true);
+                    mClassSpinner.setEnabled(true);
                 }
             }
 
@@ -432,6 +455,8 @@ public class DiaryFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
+        mDaySpinner.setSelection(0,true);
+        Log.i(TAG, "onDestroyView: ");
         super.onDestroyView();
         if (unbinder != null)
             unbinder.unbind();
@@ -532,7 +557,13 @@ public class DiaryFragment extends BaseFragment {
 
                     @Override
                     public void onNext(DiaryInfo[] diaryInfos) {
+                        if (diaryInfos.length <= 0){
+                            Toast.makeText(getActivity(), "还没有数据哦~", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         datas = new String[diaryInfos.length];
+                        for (DiaryInfo d : diaryInfos)
+                            Log.i(TAG, "onNext: " + d);
                         XAxis x = chart.getXAxis();
                         x.setLabelCount(diaryInfos.length - 1);
                         for (int i = 0 ; i < diaryInfos.length ; i ++){
@@ -565,6 +596,8 @@ public class DiaryFragment extends BaseFragment {
                     @Override
                     public void onComplete() {
                         List<Entry> mDataList = new ArrayList<>();
+                        if (datas == null || datas.length <= 0)
+                            return;
                         for (int i = 0 ; i < datas.length ; i ++)
                             mDataList.add(new Entry(i,Float.valueOf(datas[i])));
                         LineDataSet mSet = new LineDataSet(mDataList,clazz);
@@ -575,5 +608,29 @@ public class DiaryFragment extends BaseFragment {
                     }
                 });
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate: ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
     }
 }

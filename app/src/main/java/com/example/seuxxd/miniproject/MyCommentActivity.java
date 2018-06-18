@@ -15,9 +15,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import eventbusmodel.UpdateEvaluationAdapter;
 import httpclient.RetrofitClient;
 import internet.UploadCommentService;
 import internetmodel.mycomment.CommentResult;
@@ -101,6 +104,7 @@ public class MyCommentActivity extends AppCompatActivity {
                         Log.i(TAG, "onNext: " + commentResult.getStatusCode());
                         if (commentResult.getStatusCode().equals("200")){
                             Toast.makeText(MyCommentActivity.this, "评论添加成功", Toast.LENGTH_SHORT).show();
+                            EventBus.getDefault().post(new UpdateEvaluationAdapter(mProduct));
                             finish();
                         }
                         else

@@ -32,10 +32,14 @@ import com.bumptech.glide.Glide;
 import com.example.seuxxd.miniproject.MyCommentActivity;
 import com.example.seuxxd.miniproject.R;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import adapter.EvaluationRecyclerAdapter;
+import eventbusmodel.UpdateEvaluationAdapter;
 import httpclient.RetrofitClient;
 import internet.GetComment;
 import internetmodel.mycomment.UploadComment;
@@ -55,6 +59,8 @@ public class EvaluationDialog extends DialogFragment {
     private Dialog mDialog;
     private Bundle mBundle;
 
+    RecyclerView mRecyclerView;
+
     private static final String TAG = "EvaluationDialog";
 
     private UploadComment[] mComments;
@@ -66,6 +72,13 @@ public class EvaluationDialog extends DialogFragment {
         mBundle = getArguments();
     }
 
+
+    @Subscribe
+    public void setUpdateEvaluationAdapter(UpdateEvaluationAdapter updateEvaluationAdapter){
+        if (updateEvaluationAdapter.getProduct() != null){
+            updateEvaluation(updateEvaluationAdapter.getProduct(),mRecyclerView);
+        }
+    }
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -116,7 +129,7 @@ public class EvaluationDialog extends DialogFragment {
             TextView mNameText = (TextView) mContentView.findViewById(R.id.evaluation_product_name);
             TextView mPriceText = (TextView) mContentView.findViewById(R.id.evaluation_product_price);
             TextView mVolumeText = (TextView) mContentView.findViewById(R.id.evaluation_product_volume);
-            final RecyclerView mRecyclerView = (RecyclerView) mContentView.findViewById(R.id.product_evaluation_list);
+            mRecyclerView = (RecyclerView) mContentView.findViewById(R.id.product_evaluation_list);
 
             Glide.with(mContentView).load(mProduct.getImgUrl()).into(mProductView);
             mNameText.setText(mProduct.getName());
@@ -125,41 +138,7 @@ public class EvaluationDialog extends DialogFragment {
             mPriceText.setText(price);
             mVolumeText.setText(volume);
 
-            Observable<UploadComment[]> mObservable =
-                    RetrofitClient
-                            .getInstance()
-                            .create(GetComment.class)
-                            .getComments(mProduct.getId());
-            Log.i(TAG, "onCreateDialog: " + mProduct.getId());
-            mObservable
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<UploadComment[]>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(UploadComment[] comments) {
-                            mComments = comments;
-                            Log.i(TAG, "onNext: " + mComments);
-                            EvaluationRecyclerAdapter mAdapter = new EvaluationRecyclerAdapter(getContext(),mComments);
-                            mRecyclerView.setAdapter(mAdapter);
-                            mAdapter.notifyDataSetChanged();
-                            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+            updateEvaluation(mProduct, mRecyclerView);
 
 
         }
@@ -174,10 +153,56 @@ public class EvaluationDialog extends DialogFragment {
         return mDialog;
     }
 
+    private void updateEvaluation(Product mProduct, final RecyclerView mRecyclerView) {
+        Observable<UploadComment[]> mObservable =
+                RetrofitClient
+                        .getInstance()
+                        .create(GetComment.class)
+                        .getComments(mProduct.getId());
+        Log.i(TAG, "onCreateDialog: " + mProduct.getId());
+        mObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UploadComment[]>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(UploadComment[] comments) {
+                        mComments = comments;
+                        Log.i(TAG, "onNext: " + mComments);
+                        EvaluationRecyclerAdapter mAdapter = new EvaluationRecyclerAdapter(getContext(),mComments);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE,R.style.Dialog_FullScreen);
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     public void setContentView(View view){
@@ -196,11 +221,6 @@ public class EvaluationDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-//        Window mWindow = getDialog().getWindow();
-        //可以通过mMetrics获取屏幕信息
-//        DisplayMetrics mMetrics = new DisplayMetrics();
-//        mWindow.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
-//        mWindow.setLayout(mMetrics.widthPixels,mWindow.getAttributes().height);
 
     }
 
@@ -216,5 +236,7 @@ public class EvaluationDialog extends DialogFragment {
         l.gravity = mGravity;
         mWindow.setAttributes(l);
     }
+
+
 
 }

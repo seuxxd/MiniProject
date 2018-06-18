@@ -127,6 +127,9 @@ public class RecommendFragment extends BaseFragment {
         sp.getString("username","empty");
         if (!MainActivity.isFirstLogin)
             initAdapterData();
+        else if (MainActivity.isFirstLogin && MainActivity.POSITION == 0){
+            EventBus.getDefault().post(new FirstLoginNotification());
+        }
         return mView;
     }
 
@@ -138,6 +141,7 @@ public class RecommendFragment extends BaseFragment {
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
                         .getString("username","admin");
 //        getRecommendProducts(mDialog, mUsername,"asc");
+        Log.i(TAG, "initAdapterData: ");
         sortByServer();
     }
 
@@ -200,6 +204,8 @@ public class RecommendFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mFunctPosition = position;
                 sortByServer();
+                Log.i(TAG, "onItemSelected: func");
+
             }
 
             @Override
@@ -212,6 +218,9 @@ public class RecommendFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mClazzPosition = position;
                 sortByServer();
+                Log.i(TAG, "onItemSelected: class");
+
+
             }
 
             @Override
@@ -250,9 +259,6 @@ public class RecommendFragment extends BaseFragment {
                                 mPricePosition == 0 ? "asc" : "desc",
                                 String.valueOf(mFunctPosition),
                                 String.valueOf(mClazzPosition));
-        Log.i(TAG, "sortByServer: " + mPricePosition);
-        Log.i(TAG, "sortByServer: " + mFunctPosition);
-        Log.i(TAG, "sortByServer: " + mClazzPosition);
         mObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

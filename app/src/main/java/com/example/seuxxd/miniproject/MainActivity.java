@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isFirstLogin = true;
 
+    public static int POSITION = 1;
+
 //    保存fragment的列表
     List<Fragment> mFragmentList;
 
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
+                POSITION = position;
                 Log.i(TAG, "onTabSelected: " + position);
                 if (position == 0){
                     if (isFirstLogin){
@@ -176,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 mCount = 1;
                 mFirstTime = mSecondTime;
                 mSecondTime = 0;
+                Toast.makeText(this, "再点击一下退出应用", Toast.LENGTH_SHORT).show();
             }
             else {
                 mCount = 0;
