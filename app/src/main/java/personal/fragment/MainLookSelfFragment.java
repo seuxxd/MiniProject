@@ -1,11 +1,17 @@
 package personal.fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import base.fragment.BaseFragment;
 import butterknife.BindView;
@@ -102,6 +109,7 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
     @Override
     public void initView(View rootView) {
 
+        Glide.with(getContext()).load(R.drawable.main_placeholder).into(headViewImg);
         //后期可以根据后台传递的参数进行设置
         showCenterPic("");
         showHeaderView("");
@@ -185,6 +193,7 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
             case R.id.headViewImg:
                 break;
             case R.id.useCameraBtn:
+                checkPermission();
                 showDialog();
                 break;
             case R.id.makeReportBtn:
@@ -267,6 +276,62 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
             case R.id.lookMainImg:
                 break;
         }
+    }
+
+
+    private String[] permissions = {
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
+    private List<String> permissionList = new ArrayList<>();
+    /**
+     * 权限动态检测
+     */
+    private void checkPermission(){
+        permissionList.clear();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            for (int i = 0 ; i < permissions.length ; i ++){
+                if (ContextCompat.checkSelfPermission(getContext(),permissions[i]) != PackageManager.PERMISSION_GRANTED){
+                    permissionList.add(permissions[i]);
+                }
+            }
+            if (permissionList.size() <= 0){
+                showDialog();
+            }
+            else {
+                String[] temp = permissionList.toArray(new String[permissionList.size()]);
+                ActivityCompat.requestPermissions(getActivity(),temp,1);
+            }
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                boolean isOk = true;
+                for (int i = 0 ; i < grantResults.length ; i ++){
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                        isOk &= false;
+                        boolean showPermission = ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permissions[i]);
+                        if (showPermission)
+                            Toast.makeText(getActivity(), "权限未申请！", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                        isOk &= true;
+                }
+                if (isOk){
+                    showDialog();
+                }
+                else {
+                    Toast.makeText(getActivity(), "拒绝了权限！请到设置开启权限！", Toast.LENGTH_SHORT).show();
+                }
+            default:
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 }
 

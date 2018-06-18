@@ -76,6 +76,7 @@ public class MyCommentActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(mUserInput))
                     return;
                 float mRating = mRatingBar.getRating();
+                Log.i(TAG, "onClick: " + mRating);
                 UploadComment mComment = new UploadComment();
                 mComment.setRefereeCommentContent(mUserInput);
                 mComment.setRefereeNickName(mUsername);

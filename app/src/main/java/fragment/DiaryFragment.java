@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.seuxxd.miniproject.MainActivity;
 import com.example.seuxxd.miniproject.MyLoveActivity;
 import com.example.seuxxd.miniproject.R;
@@ -42,6 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import de.hdodenhof.circleimageview.CircleImageView;
 import diary.fragment.MainDiaryFragment;
 import diary.view.AddDiaryPopupwindow;
 import httpclient.RetrofitClient;
@@ -348,6 +350,8 @@ public class DiaryFragment extends BaseFragment {
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
                         .getString("username","empty");
         final LineChart mChart = mView.findViewById(R.id.chart);
+        CircleImageView mCircleView = mView.findViewById(R.id.user_img);
+        Glide.with(getContext()).load(R.drawable.main_placeholder).into(mCircleView);
         sp = getContext().getSharedPreferences("diary",Context.MODE_PRIVATE);
         final Spinner mDaySpinner = mView.findViewById(R.id.chart_day);
         final Spinner mClassSpinner = mView.findViewById(R.id.chart_class);
@@ -437,6 +441,11 @@ public class DiaryFragment extends BaseFragment {
      * 上传日记功能
      */
     private void uploadDiary(AddDiaryPopupwindow window){
+        SharedPreferences sp = getActivity().getSharedPreferences("skin",Context.MODE_PRIVATE);
+        String cbre = sp.getString("dark_circle","10");
+        String cp = sp.getString("acne","10");
+        String cs = sp.getString("stain","10");
+        String skinState = sp.getString("health","10");
         Observable<RegisterResult> mObservable =
                 RetrofitClient
                         .getInstance()
@@ -448,15 +457,11 @@ public class DiaryFragment extends BaseFragment {
                                 window.getOtherEditText(),
                                 String.valueOf(window.getMoodStar()),
                                 String.valueOf(window.getSkinStar()),
-                                "1",
-                                "1",
-                                "1",
-                                "1",
+                                cbre,
+                                cp,
+                                cs,
+                                skinState,
                                 window.getDate());
-        Log.i(TAG, "uploadDiary: " + window.getFoodEditText());
-        Log.i(TAG, "uploadDiary: " + window.getSportEditText());
-        Log.i(TAG, "uploadDiary: " + window.getOtherEditText());
-        Log.i(TAG, "uploadDiary: " + window.getDate());
         mObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

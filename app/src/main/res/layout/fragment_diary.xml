@@ -75,17 +75,19 @@
         android:layout_alignParentBottom="true"
         app:fab_addButtonColorNormal="@color/main_color"
         app:fab_expandDirection="left"
-        app:fab_addButtonSize="mini"
+        app:fab_addButtonSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_diary"
+            app:fab_icon="@mipmap/add"
             app:fab_size="mini"
             app:fab_colorNormal="@color/main_color"
             app:fab_title="@string/add_diary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
+            app:fab_icon="@mipmap/look"
             app:fab_colorNormal="@color/main_color"
             app:fab_title="@string/look_diary"
             app:fab_size="mini"
@@ -94,6 +96,7 @@
             android:layout_height="wrap_content"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/my_love"
+            app:fab_icon="@mipmap/love"
             app:fab_size="mini"
             app:fab_title="@string/my_love"
             app:fab_colorNormal="@color/main_color"

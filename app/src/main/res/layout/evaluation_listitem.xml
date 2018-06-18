@@ -35,6 +35,8 @@
             app:mrb_fillBackgroundStars="true"
             style="@style/Widget.MaterialRatingBar.RatingBar.Small"
             android:id="@+id/product_evaluation_list_user_star"
+            android:numStars="5"
+            android:stepSize="1"
             android:clickable="false"
             android:focusable="false"
             android:isIndicator="true"

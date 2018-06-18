@@ -64,7 +64,7 @@ public class EvaluationRecyclerAdapter extends RecyclerView.Adapter<EvaluationRe
             holder.mUserName.setText(mComments[position].getRefereeNickName());
             holder.mComment.setText(mComments[position].getRefereeCommentContent());
             Log.i(TAG, mComments[position].toString());
-            holder.mRatingBar.setProgress(Integer.valueOf(mComments[position].getRefereeRecommendLevel()));
+            holder.mRatingBar.setRating(Float.valueOf(mComments[position].getRefereeRecommendLevel()));
             Glide.with(mContext).load(R.drawable.main_placeholder).into(holder.mUserImg);
 
         }

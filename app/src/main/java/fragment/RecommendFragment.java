@@ -289,14 +289,18 @@ public class RecommendFragment extends BaseFragment {
     }
 
     private void sortByServer() {
+        SharedPreferences sp = getActivity().getSharedPreferences("skin",Context.MODE_PRIVATE);
+        String cbre = sp.getString("dark_circle","10");
+        String cp = sp.getString("acne","10");
+        String cs = sp.getString("stain","10");
         Observable<Product[]> mObservable =
                 RetrofitClient
                         .getInstance()
                         .create(GetRecommendByParams.class)
                         .getProductsByParams(
-                                "55",
-                                "55",
-                                "55",
+                                cbre,
+                                cp,
+                                cs,
                                 mUsername,
                                 mPricePosition == 0 ? "asc" : "desc",
                                 String.valueOf(mFunctPosition),
