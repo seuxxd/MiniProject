@@ -353,6 +353,7 @@ public class DiaryFragment extends BaseFragment {
         View mView = inflater.inflate(R.layout.fragment_diary,null,false);
         unbinder = ButterKnife.bind(this,mView);
 
+
         mUsername =
                 getContext()
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
