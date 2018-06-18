@@ -362,7 +362,6 @@ public class DiaryFragment extends BaseFragment {
         Glide.with(getContext()).load(R.drawable.main_placeholder).into(mCircleView);
         sp = getContext().getSharedPreferences("diary",Context.MODE_PRIVATE);
 
-
         String[] mDays = {"选择时间","近7天","近30天","近90天"};
         String[] mClass = {"肌肤问题","痘痘","黑眼圈","色斑"};
         ArrayAdapter<String> mDayAdapter =
