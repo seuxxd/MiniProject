@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,7 +195,7 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                 break;
             case R.id.useCameraBtn:
                 checkPermission();
-                showDialog();
+//                showDialog();
                 break;
             case R.id.makeReportBtn:
                 if (mSelectPic) {
@@ -226,16 +227,16 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                                 JSONArray mArray = mObject.getJSONArray("faces");
                                 if (mArray.length() == 0){
                                     Toast.makeText(getActivity(), "无法检测出人脸，请重新拍照！", Toast.LENGTH_SHORT).show();
+                                    MainActivity.isFirstLogin = true;
                                     return;
                                 }
                                 else {
                                     JSONObject attribute = mArray.getJSONObject(0);
                                     Log.i(TAG, "onPostExecute: " + attribute);
                                     JSONObject skinstatus = attribute.getJSONObject("attributes").getJSONObject("skinstatus");
-                                    Log.i(TAG, "onPostExecute: " + skinstatus.optString("dark_circle"));
-                                    Log.i(TAG, "onPostExecute: " + skinstatus.optString("stain"));
-                                    Log.i(TAG, "onPostExecute: " + skinstatus.optString("acne"));
-                                    Log.i(TAG, "onPostExecute: " + skinstatus.optString("health"));
+                                    JSONObject sex = attribute.getJSONObject("attributes").getJSONObject("gender");
+                                    Log.i(TAG, "onPostExecute: sex" + sex);
+                                    String gender = sex.optString("value");
                                     SkinInfo mSkinInfo = new SkinInfo();
                                     mSkinInfo.setAcne(skinstatus.optString("acne"));
                                     mSkinInfo.setDark_circle(skinstatus.optString("dark_circle"));
@@ -243,6 +244,7 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                                     mSkinInfo.setHealth(skinstatus.optString("health"));
                                     Intent mIntent = new Intent(getActivity(),ReportActivity.class);
                                     mIntent.putExtra("skin",mSkinInfo);
+                                    mIntent.putExtra("sex",gender.equals("Male") ? "1" : "0");
                                     SharedPreferences sp = getActivity().getSharedPreferences("skin",Context.MODE_PRIVATE);
                                     sp.edit()
                                             .putString("dark_circle",mSkinInfo.getDark_circle())
@@ -251,8 +253,9 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                                             .putString("health",mSkinInfo.getHealth()).apply();
                                     startActivity(mIntent);
                                 }
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
+                                Toast.makeText(getActivity(), "检测失败，请重新尝试！", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -266,7 +269,9 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                             super.onCancelled();
                         }
                     };
-                    mTask.execute();
+                    WeakReference<AsyncTask<Void,Void,String>> mWeakTask = new WeakReference<>(mTask);
+                    if (mWeakTask.get() != null)
+                        mWeakTask.get().execute();
 
 
                 } else {
@@ -297,14 +302,17 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                 }
             }
             if (permissionList.size() <= 0){
+                Log.i(TAG, "checkPermission: size <= 0");
                 showDialog();
             }
             else {
                 String[] temp = permissionList.toArray(new String[permissionList.size()]);
                 ActivityCompat.requestPermissions(getActivity(),temp,1);
+                Log.i(TAG, "checkPermission: size >= 1" + permissionList.size());
             }
-
         }
+        else
+            showDialog();
     }
 
     @Override
@@ -323,6 +331,7 @@ public class MainLookSelfFragment extends BaseFragment implements LookView {
                         isOk &= true;
                 }
                 if (isOk){
+                    Log.i(TAG, "onRequestPermissionsResult: ok true");
                     showDialog();
                 }
                 else {

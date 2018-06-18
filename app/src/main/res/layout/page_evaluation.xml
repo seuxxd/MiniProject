@@ -25,14 +25,14 @@
             android:gravity="center"
             android:text="@string/product_test" />
 
-        <ImageView
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@mipmap/share"
-            android:id="@+id/product_evaluation_share"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentEnd="true" />
+        <!--<ImageView-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:src="@mipmap/share"-->
+            <!--android:id="@+id/product_evaluation_share"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_alignParentEnd="true" />-->
 
 
         <ImageView
@@ -94,15 +94,16 @@
     </LinearLayout>
 
     <Button
+        style=""
         android:id="@+id/look_my_comment"
         android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/main_look_btn_back"
         android:text="@string/look_my_comment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_below="@id/evaluation_divider_layout"

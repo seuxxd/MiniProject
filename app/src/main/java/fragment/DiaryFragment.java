@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +110,6 @@ public class DiaryFragment extends BaseFragment {
                 Log.i(TAG, "onClick: addDiary");
                 mWindow.storeInfo(sp);
                 uploadDiary(mWindow);
-                mWindow.dismiss();
             }
         });
     }
@@ -440,21 +440,28 @@ public class DiaryFragment extends BaseFragment {
     /**
      * 上传日记功能
      */
-    private void uploadDiary(AddDiaryPopupwindow window){
+    private void uploadDiary(final AddDiaryPopupwindow window){
         SharedPreferences sp = getActivity().getSharedPreferences("skin",Context.MODE_PRIVATE);
         String cbre = sp.getString("dark_circle","10");
         String cp = sp.getString("acne","10");
         String cs = sp.getString("stain","10");
         String skinState = sp.getString("health","10");
+        String mFoodtext = window.getFoodEditText().trim();
+        String mSporttext = window.getSportEditText().trim();
+        String mOthertext = window.getOtherEditText().trim();
+        if (TextUtils.isEmpty(mFoodtext) && TextUtils.isEmpty(mSporttext) && TextUtils.isEmpty(mOthertext)){
+            Toast.makeText(getActivity(), "日记内容不能为空哦！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Observable<RegisterResult> mObservable =
                 RetrofitClient
                         .getInstance()
                         .create(AddDiaryService.class)
                         .addDiary(
                                 mUsername,
-                                window.getFoodEditText(),
-                                window.getSportEditText(),
-                                window.getOtherEditText(),
+                                mFoodtext,
+                                mSporttext,
+                                mOthertext,
                                 String.valueOf(window.getMoodStar()),
                                 String.valueOf(window.getSkinStar()),
                                 cbre,
@@ -477,6 +484,7 @@ public class DiaryFragment extends BaseFragment {
                         switch (registerResult.getStatusCode()){
                             case "200":
                                 Toast.makeText(getContext(), "日记添加成功", Toast.LENGTH_SHORT).show();
+                                window.dismiss();
                                 break;
                             case "404":
                             default:

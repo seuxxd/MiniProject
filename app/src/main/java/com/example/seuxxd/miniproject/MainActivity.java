@@ -100,11 +100,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
+                Log.i(TAG, "onTabSelected: " + position);
                 if (position == 0){
-                    if (isFirstLogin)
+                    if (isFirstLogin){
                         EventBus.getDefault().post(new FirstLoginNotification());
-                    else
+                        Log.i(TAG, "onTabSelected: first");
+                    }
+                    else{
                         EventBus.getDefault().post(new UpdateProductAdapter());
+                        Log.i(TAG, "onTabSelected: update");
+                    }
 
                 }
 

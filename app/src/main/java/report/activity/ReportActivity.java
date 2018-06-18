@@ -36,6 +36,14 @@ import base.activity.BaseActivity;
 import butterknife.BindView;
 import butterknife.OnClick;
 import commonmodels.SkinInfo;
+import httpclient.RetrofitClient;
+import internet.GetPoem;
+import internetmodel.poem.Poem;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import personal.fragment.MainLookSelfFragment;
 import utils.tools.FaceExtract;
 import utils.tools.GetJsonByImage;
@@ -125,6 +133,40 @@ public class ReportActivity extends BaseActivity {
 
         Intent mSkinIntent = getIntent();
         SkinInfo mInfo = mSkinIntent.getParcelableExtra("skin");
+        String sex = mSkinIntent.getStringExtra("sex");
+        Observable<Poem> mObservable =
+                RetrofitClient
+                        .getInstance()
+                        .create(GetPoem.class)
+                        .getPoem(sex);
+        mObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Poem>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Poem poem) {
+                        if (poem != null){
+                            String mPoem = poem.getContent();
+                            poetryTv.setText(mPoem);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Toast.makeText(ReportActivity.this, "获取描述诗句失败！", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
         float healthValue , stainValue , acneValue , dark_circle;
         if (mInfo != null){
             healthValue = Float.parseFloat(mInfo.getHealth());   //健康

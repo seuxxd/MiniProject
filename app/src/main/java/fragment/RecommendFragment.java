@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seuxxd.miniproject.MainActivity;
 import com.example.seuxxd.miniproject.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -124,8 +125,8 @@ public class RecommendFragment extends BaseFragment {
 
         SharedPreferences sp = getContext().getSharedPreferences("user",Context.MODE_PRIVATE);
         sp.getString("username","empty");
-
-
+        if (!MainActivity.isFirstLogin)
+            initAdapterData();
         return mView;
     }
 
@@ -136,64 +137,8 @@ public class RecommendFragment extends BaseFragment {
                 getActivity()
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
                         .getString("username","admin");
-        getRecommendProducts(mDialog, mUsername,"asc");
+//        getRecommendProducts(mDialog, mUsername,"asc");
         sortByServer();
-    }
-
-    private void getRecommendProducts(final ProgressDialog mDialog, String mUsername , String direction) {
-        Observable<Product[]> mObservable =
-                RetrofitClient
-                        .getInstance()
-                        .create(GetRecommendProducts.class)
-                        .getProducts(56,56,56,mUsername,direction);
-        mObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Product[]>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        //展示进度条，不可操作，直到完成下载部分
-                        mDialog.show();
-                    }
-
-                    @Override
-                    public void onNext(Product[] products) {
-                        mAllProducts = products;
-                        List<Product> list = new ArrayList<>();
-                        for (Product p : products)
-                            list.add(p);
-                        Log.i(TAG, "onNext: json : " + products);
-                        //在这里开始传递数据，展示列表
-                        mAdapter = new ProductRecyclerAdapter(
-                                getContext(),
-                                list,
-                                ((AppCompatActivity)getActivity()).getSupportFragmentManager(),
-                                false);
-                        mRecyclerView.setAdapter(mAdapter);
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        //出错提示
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(), "出错，请重试", Toast.LENGTH_SHORT).show();
-                                if (mDialog.isShowing())
-                                    mDialog.dismiss();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        //完成后
-                        if (mDialog.isShowing())
-                            mDialog.dismiss();
-                    }
-                });
     }
 
 

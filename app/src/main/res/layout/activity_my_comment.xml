@@ -83,7 +83,6 @@
         android:maxLines="5"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
-        android:background="@null"
         android:id="@+id/my_comment_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

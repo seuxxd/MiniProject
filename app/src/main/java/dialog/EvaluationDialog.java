@@ -82,22 +82,22 @@ public class EvaluationDialog extends DialogFragment {
             }
         });
 
-        ImageView mShareButton = (ImageView) mContentView.findViewById(R.id.product_evaluation_share);
-        mShareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mIntent = new Intent(Intent.ACTION_SEND);
-                try {
-                    URI mURI = new URI("https://www.baidu.com");
-                    mIntent.putExtra(Intent.EXTRA_TEXT,"hello");
-                    mIntent.setType("*/*");
-                    mIntent.setPackage("com.tencent.mm");
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                startActivity(Intent.createChooser(mIntent,"请选择要分享的平台"));
-            }
-        });
+//        ImageView mShareButton = (ImageView) mContentView.findViewById(R.id.product_evaluation_share);
+//        mShareButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent mIntent = new Intent(Intent.ACTION_SEND);
+//                try {
+//                    URI mURI = new URI("https://www.baidu.com");
+//                    mIntent.putExtra(Intent.EXTRA_TEXT,"hello");
+//                    mIntent.setType("*/*");
+//                    mIntent.setPackage("com.tencent.mm");
+//                } catch (URISyntaxException e) {
+//                    e.printStackTrace();
+//                }
+//                startActivity(Intent.createChooser(mIntent,"请选择要分享的平台"));
+//            }
+//        });
         Button mLookMyCommentButton = (Button) mContentView.findViewById(R.id.look_my_comment);
         mLookMyCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
