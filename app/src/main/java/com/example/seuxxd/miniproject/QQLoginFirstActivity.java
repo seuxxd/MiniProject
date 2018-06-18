@@ -204,6 +204,7 @@ public class QQLoginFirstActivity extends AppCompatActivity {
                 if (loginResult.getStatusCode().equals("200")){
                     Toast.makeText(QQLoginFirstActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                     startActivity(mIntent);
+                    finish();
                 }
                 else {
                     Log.i(TAG, "onNext: " + loginResult.getStatusCode());

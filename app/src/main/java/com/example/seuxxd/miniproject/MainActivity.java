@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -158,13 +159,33 @@ public class MainActivity extends AppCompatActivity {
      *
      * 连续两下后退退出APP
      */
+    private int mCount = 0;
+    private long mFirstTime = 0;
+    private long mSecondTime = 0;
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (event.getAction()){
-            case KeyEvent.ACTION_DOWN:
+    public void onBackPressed() {
+        if (mCount == 0){
+            mCount ++;
+            mFirstTime = System.currentTimeMillis();
+            Toast.makeText(this, "再点击一下退出应用", Toast.LENGTH_SHORT).show();
         }
-        return super.onKeyDown(keyCode, event);
+        else if (mCount == 1){
+            mSecondTime = System.currentTimeMillis();
+            if (mSecondTime - mFirstTime > 1000){
+                mCount = 1;
+                mFirstTime = mSecondTime;
+                mSecondTime = 0;
+            }
+            else {
+                mCount = 0;
+                mFirstTime = 0;
+                mSecondTime = 0;
+                finish();
+            }
+        }
     }
+
 
 
     @Override
