@@ -354,6 +354,7 @@ public class DiaryFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this,mView);
 
 
+
         mUsername =
                 getContext()
                         .getSharedPreferences("user", Context.MODE_PRIVATE)
